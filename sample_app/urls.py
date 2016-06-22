@@ -19,9 +19,6 @@
 #
 
 from django.conf.urls import url
-
-from sample_app import views as experimental_views
-
 from simplelogin.views import (
     RequestActivationKey,
     ActivateAccount,
@@ -31,6 +28,8 @@ from simplelogin.views import (
     AccountStatus,
 
 )
+
+from sample_app import views as experimental_views
 from sample_app.models import UserProfile
 
 

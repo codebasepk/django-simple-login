@@ -18,10 +18,9 @@
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #
 
-from rest_framework.views import APIView
-from rest_framework.response import Response
 from rest_framework import status
-
+from rest_framework.response import Response
+from rest_framework.views import APIView
 from simplelogin.serializers import (
     ActivationKeyRequestSerializer,
     AccountActivationSerializer,
