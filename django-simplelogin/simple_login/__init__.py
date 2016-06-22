@@ -18,9 +18,4 @@
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #
 
-from django.apps import AppConfig
-
-
-class SimpleloginConfig(AppConfig):
-    name = 'simplelogin'
-    verbose_name = 'Simple Login'
+default_app_config = 'simple_login.apps.SimpleLoginConfig'
