@@ -28,8 +28,8 @@ from django.db.models.signals import post_save
 from django.dispatch import receiver
 from rest_framework.authtoken.models import Token
 
-from simplelogin import helpers
-from simplelogin.managers import SimpleUserManager
+from simple_login import helpers
+from simple_login.managers import SimpleUserManager
 
 KEY_DEFAULT_VALUE = -1
 

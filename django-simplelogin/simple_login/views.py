@@ -21,7 +21,7 @@
 from rest_framework import status
 from rest_framework.response import Response
 from rest_framework.views import APIView
-from simplelogin.serializers import (
+from simple_login.serializers import (
     ActivationKeyRequestSerializer,
     AccountActivationSerializer,
     LoginSerializer,

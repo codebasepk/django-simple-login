@@ -20,7 +20,7 @@
 
 from django.db import models
 
-from simplelogin.models import BaseUser
+from simple_login.models import BaseUser
 
 
 class UserProfile(BaseUser):

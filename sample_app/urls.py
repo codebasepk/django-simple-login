@@ -19,7 +19,7 @@
 #
 
 from django.conf.urls import url
-from simplelogin.views import (
+from simple_login.views import (
     RequestActivationKey,
     ActivateAccount,
     Login,

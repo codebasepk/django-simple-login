@@ -25,9 +25,9 @@ from rest_framework import (
 )
 from rest_framework.authtoken.models import Token
 
-from simplelogin import helpers
-from simplelogin.exceptions import NotModified, Forbidden
-from simplelogin.models import BaseUser, KEY_DEFAULT_VALUE
+from simple_login import helpers
+from simple_login.exceptions import NotModified, Forbidden
+from simple_login.models import BaseUser, KEY_DEFAULT_VALUE
 
 
 class CustomBaseSerializer(serializers.Serializer):
