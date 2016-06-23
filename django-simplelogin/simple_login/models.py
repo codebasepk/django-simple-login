@@ -38,13 +38,10 @@ KEY_DEFAULT_VALUE = -1
 def process_save(sender, instance=None, created=False, **kwargs):
     if created:
         Token.objects.create(user=instance)
-
         if not instance.is_admin:
             instance.account_activation_key = helpers.generate_random_key()
-            instance.set_password(instance.password)
             instance.is_active = False
             instance.save()
-
             helpers.send_account_activation_email(
                 instance.email,
                 instance.account_activation_key
@@ -86,3 +83,17 @@ class BaseUser(AbstractBaseUser, PermissionsMixin):
 
     class Meta:
         abstract = True
+
+    # Logic to ensure the password is always hashed.
+    # ref: http://stackoverflow.com/a/1793323
+    __original_password = None
+
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+        self.__original_password = self.password
+
+    def save(self, *args, **kwargs):
+        if self.password != self.__original_password:
+            self.set_password(self.password)
+        super().save(*args, **kwargs)
+        self.__original_password = self.password
