@@ -18,14 +18,11 @@
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #
 
-from django.core.validators import validate_email
 from rest_framework import (
     exceptions as drf_exceptions,
     serializers
 )
-from rest_framework.authtoken.models import Token
 
-from simple_login import helpers
 from simple_login.exceptions import NotModified, Forbidden
 from simple_login.models import BaseUser, KEY_DEFAULT_VALUE
 
@@ -35,16 +32,9 @@ class CustomBaseSerializer(serializers.Serializer):
         super().__init__(**kwargs)
         self.user_model = user_model
         if not self.user_model or not issubclass(self.user_model, BaseUser):
-            msg = 'user_model must be an instance of BaseUser'
+            msg = 'user_model must be an instance of ' \
+                  'simple_login.models.BaseUser'
             raise serializers.ValidationError(msg)
-
-    def raise_if_none(self, value, name):
-        if not value:
-            msg = 'Must include "{}".'.format(name)
-            raise serializers.ValidationError(msg)
-
-    def raise_if_email_not_valid(self):
-        validate_email(self.email)
 
     def raise_if_user_does_not_exist(self):
         try:
@@ -71,20 +61,9 @@ class ActivationKeyRequestSerializer(CustomBaseSerializer):
 
     def validate(self, attrs):
         self.email = attrs.get('email')
-        self.raise_if_none(self.email, 'email')
-        self.raise_if_email_not_valid()
         self.raise_if_user_does_not_exist()
         self.raise_if_user_already_activated()
         return attrs
-
-    def send_activation_code(self):
-        user = self.user_model.objects.get(email=self.email)
-        user.account_activation_key = helpers.generate_random_key()
-        user.save()
-        helpers.send_account_activation_email(
-            self.email,
-            user.account_activation_key
-        )
 
 
 class AccountActivationSerializer(CustomBaseSerializer):
@@ -101,19 +80,10 @@ class AccountActivationSerializer(CustomBaseSerializer):
     def validate(self, attrs):
         self.email = attrs.get('email')
         self.activation_key = attrs.get('activation_key')
-        self.raise_if_none(self.email, 'email')
-        self.raise_if_none(self.activation_key, 'activation_key')
-        self.raise_if_email_not_valid()
         self.raise_if_user_does_not_exist()
         self.raise_if_user_already_activated()
         self.raise_if_activation_key_invalid()
         return attrs
-
-    def activate(self):
-        user = self.user_model.objects.get(email=self.email)
-        user.is_active = True
-        user.account_activation_key = KEY_DEFAULT_VALUE
-        user.save()
 
 
 class LoginSerializer(CustomBaseSerializer):
@@ -129,18 +99,10 @@ class LoginSerializer(CustomBaseSerializer):
     def validate(self, attrs):
         self.email = attrs.get('email')
         self.password = attrs.get('password')
-        self.raise_if_none(self.email, 'email')
-        self.raise_if_none(self.password, 'password')
-        self.raise_if_email_not_valid()
         self.raise_if_user_does_not_exist()
         self.raise_if_user_not_activated()
         self.raise_if_password_invalid()
         return attrs
-
-    def get_token(self):
-        user = self.user_model.objects.get(email=self.email)
-        token = Token.objects.get(user=user)
-        return token.key
 
 
 class PasswordResetRequestSerializer(CustomBaseSerializer):
@@ -148,19 +110,8 @@ class PasswordResetRequestSerializer(CustomBaseSerializer):
 
     def validate(self, attrs):
         self.email = attrs.get('email')
-        self.raise_if_none(self.email, 'email')
-        self.raise_if_email_not_valid()
         self.raise_if_user_does_not_exist()
         return attrs
-
-    def send_password_reset_key(self):
-        user = self.user_model.objects.get(email=self.email)
-        user.password_reset_key = helpers.generate_random_key()
-        user.save()
-        helpers.send_password_reset_email(
-            self.email,
-            user.password_reset_key
-        )
 
 
 class PasswordChangeSerializer(CustomBaseSerializer):
@@ -178,20 +129,9 @@ class PasswordChangeSerializer(CustomBaseSerializer):
     def validate(self, attrs):
         self.email = attrs.get('email')
         self.password_reset_key = attrs.get('password_reset_key')
-        self.new_password = attrs.get('new_password')
-        self.raise_if_none(self.email, 'email')
-        self.raise_if_none(self.password_reset_key, 'password_reset_key')
-        self.raise_if_none(self.new_password, 'new_password')
-        self.raise_if_email_not_valid()
         self.raise_if_user_does_not_exist()
         self.raise_if_password_reset_key_invalid()
         return attrs
-
-    def change(self):
-        user = self.user_model.objects.get(email=self.email)
-        user.set_password(self.new_password)
-        user.password_reset_key = KEY_DEFAULT_VALUE
-        user.save()
 
 
 class StatusSerializer(CustomBaseSerializer):
@@ -199,8 +139,6 @@ class StatusSerializer(CustomBaseSerializer):
 
     def validate(self, attrs):
         self.email = attrs.get('email')
-        self.raise_if_none(self.email, 'email')
-        self.raise_if_email_not_valid()
         self.raise_if_user_does_not_exist()
         self.raise_if_user_not_activated()
         return attrs

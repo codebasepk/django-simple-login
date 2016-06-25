@@ -21,6 +21,7 @@
 from rest_framework import status
 from rest_framework.response import Response
 from rest_framework.views import APIView
+
 from simple_login.serializers import (
     ActivationKeyRequestSerializer,
     AccountActivationSerializer,
@@ -29,22 +30,29 @@ from simple_login.serializers import (
     PasswordChangeSerializer,
     StatusSerializer,
 )
+from simple_login.helpers import AccountHelpers
 
 
 class CustomAPIView(APIView):
     user_model = None
+    serializer = None
+
+    @property
+    def user_account(self):
+        email = self.serializer.data.get('email')
+        return AccountHelpers(self.user_model, email)
 
 
 class RequestActivationKey(CustomAPIView):
     serializer_class = ActivationKeyRequestSerializer
 
     def post(self, request, *args, **kwargs):
-        serializer = self.serializer_class(
+        self.serializer = self.serializer_class(
             user_model=self.user_model,
             data=request.data
         )
-        serializer.is_valid(raise_exception=True)
-        serializer.send_activation_code()
+        self.serializer.is_valid(raise_exception=True)
+        self.user_account.generate_and_send_account_activation_key()
         return Response(status=status.HTTP_200_OK)
 
 
@@ -52,12 +60,12 @@ class ActivateAccount(CustomAPIView):
     serializer_class = AccountActivationSerializer
 
     def post(self, request, *args, **kwargs):
-        serializer = self.serializer_class(
+        self.serializer = self.serializer_class(
             user_model=self.user_model,
             data=request.data
         )
-        serializer.is_valid(raise_exception=True)
-        serializer.activate()
+        self.serializer.is_valid(raise_exception=True)
+        self.user_account.activate()
         return Response(status=status.HTTP_200_OK)
 
 
@@ -65,14 +73,14 @@ class Login(CustomAPIView):
     serializer_class = LoginSerializer
 
     def post(self, request, *args, **kwargs):
-        serializer = self.serializer_class(
+        self.serializer = self.serializer_class(
             user_model=self.user_model,
             data=request.data
         )
-        serializer.is_valid(raise_exception=True)
-        login_key = serializer.get_token()
+        self.serializer.is_valid(raise_exception=True)
+        auth_token = self.user_account.get_auth_token()
         return Response(
-            data={'token': login_key},
+            data={'token': auth_token},
             status=status.HTTP_200_OK
         )
 
@@ -81,25 +89,29 @@ class RequestPasswordReset(CustomAPIView):
     serializer_class = PasswordResetRequestSerializer
 
     def post(self, request, *args, **kwargs):
-        serializer = self.serializer_class(
+        self.serializer = self.serializer_class(
             user_model=self.user_model,
             data=request.data
         )
-        serializer.is_valid(raise_exception=True)
-        serializer.send_password_reset_key()
+        self.serializer.is_valid(raise_exception=True)
+        self.user_account.generate_and_send_password_reset_key()
         return Response(status=status.HTTP_200_OK)
 
 
 class ChangePassword(CustomAPIView):
     serializer_class = PasswordChangeSerializer
 
+    def change(self):
+        new_password = self.serializer.data.get('new_password')
+        self.user_account.change_password(new_password)
+
     def post(self, request, *args, **kwargs):
-        serializer = self.serializer_class(
+        self.serializer = self.serializer_class(
             user_model=self.user_model,
             data=request.data
         )
-        serializer.is_valid(raise_exception=True)
-        serializer.change()
+        self.serializer.is_valid(raise_exception=True)
+        self.change()
         return Response(status=status.HTTP_200_OK)
 
 
