@@ -19,10 +19,7 @@
 #
 
 from rest_framework.generics import CreateAPIView
-from rest_framework.views import APIView
-
-from rest_framework.response import Response
-from rest_framework import status, permissions
+from simple_login.views import RetrieveUpdateDestroyProfileView
 
 from sample_app.serializers import UserProfileSerializer
 
@@ -31,9 +28,6 @@ class UserRegistrationView(CreateAPIView):
     serializer_class = UserProfileSerializer
 
 
-class UserDetailsView(APIView):
-    permission_classes = (permissions.IsAuthenticated, )
-
-    def get(self, request, *args, **kwargs):
-        serializer = UserProfileSerializer(instance=self.request.user)
-        return Response(serializer.data, status=status.HTTP_200_OK)
+class UserProfile(RetrieveUpdateDestroyProfileView):
+    def get_serializer_class(self):
+        return UserProfileSerializer

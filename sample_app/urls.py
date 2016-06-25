@@ -26,9 +26,7 @@ from simple_login.views import (
     RequestPasswordReset,
     ChangePassword,
     AccountStatus,
-
 )
-
 from sample_app import views as experimental_views
 from sample_app.models import UserProfile
 
@@ -64,6 +62,6 @@ urlpatterns = [
     ),
     url(
         r'^api/sample/me',
-        experimental_views.UserDetailsView.as_view()
+        experimental_views.UserProfile.as_view()
     ),
 ]
