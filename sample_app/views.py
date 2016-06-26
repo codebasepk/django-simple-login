@@ -22,19 +22,23 @@ from rest_framework.generics import CreateAPIView
 from simple_login.views import (
     RetrieveUpdateDestroyProfileView,
     AccountActivationAPIView,
+    LoginAPIView,
 )
 
 from sample_app.serializers import UserProfileSerializer
 
 
-class UserRegistrationView(CreateAPIView):
+class RegisterUser(CreateAPIView):
     serializer_class = UserProfileSerializer
 
 
 class UserProfile(RetrieveUpdateDestroyProfileView):
-    def get_serializer_class(self):
-        return UserProfileSerializer
+    serializer_class = UserProfileSerializer
 
 
 class ActivateAccount(AccountActivationAPIView):
+    serializer_class = UserProfileSerializer
+
+
+class Login(LoginAPIView):
     serializer_class = UserProfileSerializer

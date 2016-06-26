@@ -21,7 +21,6 @@
 from django.conf.urls import url
 from simple_login.views import (
     RequestActivationKey,
-    Login,
     RequestPasswordReset,
     ChangePassword,
     AccountStatus,
@@ -33,7 +32,7 @@ from sample_app.models import UserProfile
 urlpatterns = [
     url(
         r'^api/sample/register$',
-        experimental_views.UserRegistrationView.as_view()
+        experimental_views.RegisterUser.as_view()
     ),
     url(
         r'^api/sample/request$',
@@ -45,7 +44,7 @@ urlpatterns = [
     ),
     url(
         r'^api/sample/login$',
-        Login.as_view(user_model=UserProfile)
+        experimental_views.Login.as_view(user_model=UserProfile)
     ),
     url(
         r'^api/sample/reset$',
