@@ -84,20 +84,26 @@ class AccountActivationAPIView(CustomAPIView):
         return Response(data=data, status=status.HTTP_200_OK)
 
 
-class Login(CustomAPIView):
-    serializer_class = LoginSerializer
+class LoginAPIView(CustomAPIView):
+    serializer_class = None
+
+    def get_serializer_class(self):
+        raise NotImplemented('Please implement this method on inheritance.')
+
+    def _get_serializer_class(self):
+        return self.serializer_class or self.get_serializer_class()
 
     def post(self, request, *args, **kwargs):
-        self.serializer = self.serializer_class(
+        self.serializer = LoginSerializer(
             user_model=self.user_model,
             data=request.data
         )
         self.serializer.is_valid(raise_exception=True)
-        auth_token = self.user_account.get_auth_token()
-        return Response(
-            data={'token': auth_token},
-            status=status.HTTP_200_OK
-        )
+        serializer_class = self._get_serializer_class()
+        serializer = serializer_class(instance=self.user_account.user)
+        data = serializer.data
+        data.update({'token': self.user_account.get_auth_token()})
+        return Response(data=data, status=status.HTTP_200_OK)
 
 
 class RequestPasswordReset(CustomAPIView):
