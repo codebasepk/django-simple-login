@@ -33,7 +33,7 @@ from simple_login.serializers import (
 from simple_login.helpers import AccountHelpers
 
 
-class CustomAPIView(APIView):
+class BaseAPIView(APIView):
     user_model = None
     serializer = None
 
@@ -42,8 +42,11 @@ class CustomAPIView(APIView):
         email = self.serializer.data.get('email')
         return AccountHelpers(self.user_model, email)
 
+    def get_user(self):
+        return self.user_account.user
 
-class RequestActivationKey(CustomAPIView):
+
+class RequestActivationKey(BaseAPIView):
     serializer_class = ActivationKeyRequestSerializer
 
     def post(self, request, *args, **kwargs):
@@ -56,7 +59,7 @@ class RequestActivationKey(CustomAPIView):
         return Response(status=status.HTTP_200_OK)
 
 
-class AccountActivationAPIView(CustomAPIView):
+class AccountActivationAPIView(BaseAPIView):
     serializer_class = None
 
     def get_serializer_class(self):
@@ -84,7 +87,7 @@ class AccountActivationAPIView(CustomAPIView):
         return Response(data=data, status=status.HTTP_200_OK)
 
 
-class LoginAPIView(CustomAPIView):
+class LoginAPIView(BaseAPIView):
     serializer_class = None
 
     def get_serializer_class(self):
@@ -106,7 +109,7 @@ class LoginAPIView(CustomAPIView):
         return Response(data=data, status=status.HTTP_200_OK)
 
 
-class RequestPasswordReset(CustomAPIView):
+class RequestPasswordReset(BaseAPIView):
     serializer_class = PasswordResetRequestSerializer
 
     def post(self, request, *args, **kwargs):
@@ -119,7 +122,7 @@ class RequestPasswordReset(CustomAPIView):
         return Response(status=status.HTTP_200_OK)
 
 
-class ChangePassword(CustomAPIView):
+class ChangePassword(BaseAPIView):
     serializer_class = PasswordChangeSerializer
 
     def change(self):
@@ -136,7 +139,7 @@ class ChangePassword(CustomAPIView):
         return Response(status=status.HTTP_200_OK)
 
 
-class AccountStatus(CustomAPIView):
+class AccountStatus(BaseAPIView):
     serializer_class = StatusSerializer
 
     def post(self, request, *args, **kwargs):
