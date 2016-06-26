@@ -28,6 +28,8 @@ from simple_login.models import BaseUser, KEY_DEFAULT_VALUE
 
 
 class CustomBaseSerializer(serializers.Serializer):
+    email = None
+
     def __init__(self, user_model, **kwargs):
         super().__init__(**kwargs)
         self.user_model = user_model
@@ -35,6 +37,10 @@ class CustomBaseSerializer(serializers.Serializer):
             msg = 'user_model must be an instance of ' \
                   'simple_login.models.BaseUser'
             raise serializers.ValidationError(msg)
+
+    def validate(self, attrs):
+        """A common call that's part of every request."""
+        self.email = attrs.get('email')
 
     def raise_if_user_does_not_exist(self):
         try:
@@ -60,7 +66,7 @@ class ActivationKeyRequestSerializer(CustomBaseSerializer):
     email = serializers.EmailField(label='Email')
 
     def validate(self, attrs):
-        self.email = attrs.get('email')
+        super().validate(attrs)
         self.raise_if_user_does_not_exist()
         self.raise_if_user_already_activated()
         return attrs
@@ -70,7 +76,7 @@ class AccountActivationValidationSerializer(CustomBaseSerializer):
     email = serializers.EmailField(label='Email')
     activation_key = serializers.IntegerField(label='Activation key')
 
-    def raise_if_activation_key_invalid(self):
+    def _raise_if_activation_key_invalid(self):
         user = self.user_model.objects.get(email=self.email)
         key = user.account_activation_key
         if key == KEY_DEFAULT_VALUE or key != int(self.activation_key):
@@ -78,11 +84,11 @@ class AccountActivationValidationSerializer(CustomBaseSerializer):
             raise serializers.ValidationError(msg)
 
     def validate(self, attrs):
-        self.email = attrs.get('email')
+        super().validate(attrs)
         self.activation_key = attrs.get('activation_key')
         self.raise_if_user_does_not_exist()
         self.raise_if_user_already_activated()
-        self.raise_if_activation_key_invalid()
+        self._raise_if_activation_key_invalid()
         return attrs
 
 
@@ -90,18 +96,18 @@ class LoginSerializer(CustomBaseSerializer):
     email = serializers.EmailField(label='Email')
     password = serializers.CharField(label='Password')
 
-    def raise_if_password_invalid(self):
+    def _raise_if_password_invalid(self):
         user = self.user_model.objects.get(email=self.email)
         if not user.check_password(self.password):
             msg = 'Invalid password.'
             raise drf_exceptions.AuthenticationFailed(msg)
 
     def validate(self, attrs):
-        self.email = attrs.get('email')
+        super().validate(attrs)
         self.password = attrs.get('password')
         self.raise_if_user_does_not_exist()
         self.raise_if_user_not_activated()
-        self.raise_if_password_invalid()
+        self._raise_if_password_invalid()
         return attrs
 
 
@@ -109,7 +115,7 @@ class PasswordResetRequestSerializer(CustomBaseSerializer):
     email = serializers.EmailField(label='Email')
 
     def validate(self, attrs):
-        self.email = attrs.get('email')
+        super().validate(attrs)
         self.raise_if_user_does_not_exist()
         return attrs
 
@@ -119,7 +125,7 @@ class PasswordChangeSerializer(CustomBaseSerializer):
     password_reset_key = serializers.IntegerField(label='Password reset key')
     new_password = serializers.CharField(label='New password')
 
-    def raise_if_password_reset_key_invalid(self):
+    def _raise_if_password_reset_key_invalid(self):
         user = self.user_model.objects.get(email=self.email)
         key = user.password_reset_key
         if key == KEY_DEFAULT_VALUE or key != int(self.password_reset_key):
@@ -127,10 +133,10 @@ class PasswordChangeSerializer(CustomBaseSerializer):
             raise serializers.ValidationError(msg)
 
     def validate(self, attrs):
-        self.email = attrs.get('email')
+        super().validate(attrs)
         self.password_reset_key = attrs.get('password_reset_key')
         self.raise_if_user_does_not_exist()
-        self.raise_if_password_reset_key_invalid()
+        self._raise_if_password_reset_key_invalid()
         return attrs
 
 
@@ -138,7 +144,7 @@ class StatusSerializer(CustomBaseSerializer):
     email = serializers.EmailField(label='Email')
 
     def validate(self, attrs):
-        self.email = attrs.get('email')
+        super().validate(attrs)
         self.raise_if_user_does_not_exist()
         self.raise_if_user_not_activated()
         return attrs
