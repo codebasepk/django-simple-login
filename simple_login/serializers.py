@@ -66,7 +66,7 @@ class ActivationKeyRequestSerializer(CustomBaseSerializer):
         return attrs
 
 
-class AccountActivationSerializer(CustomBaseSerializer):
+class AccountActivationValidationSerializer(CustomBaseSerializer):
     email = serializers.EmailField(label='Email')
     activation_key = serializers.IntegerField(label='Activation key')
 

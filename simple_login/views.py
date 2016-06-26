@@ -24,7 +24,7 @@ from rest_framework.views import APIView
 
 from simple_login.serializers import (
     ActivationKeyRequestSerializer,
-    AccountActivationSerializer,
+    AccountActivationValidationSerializer,
     LoginSerializer,
     PasswordResetRequestSerializer,
     PasswordChangeSerializer,
@@ -56,17 +56,32 @@ class RequestActivationKey(CustomAPIView):
         return Response(status=status.HTTP_200_OK)
 
 
-class ActivateAccount(CustomAPIView):
-    serializer_class = AccountActivationSerializer
+class AccountActivationAPIView(CustomAPIView):
+    serializer_class = None
+
+    def get_serializer_class(self):
+        raise NotImplemented('Please implement this method on inheritance.')
+
+    def _get_serializer_class(self):
+        return self.serializer_class or self.get_serializer_class()
 
     def post(self, request, *args, **kwargs):
-        self.serializer = self.serializer_class(
+        # Make sure the request parameters are valid and activate
+        # the user account.
+        self.serializer = AccountActivationValidationSerializer(
             user_model=self.user_model,
             data=request.data
         )
         self.serializer.is_valid(raise_exception=True)
         self.user_account.activate()
-        return Response(status=status.HTTP_200_OK)
+        # We want to return user details, including the login
+        # token on activation of the account, so lets formulate
+        # that.
+        serializer_class = self._get_serializer_class()
+        serializer = serializer_class(instance=self.user_account.user)
+        data = serializer.data
+        data.update({'token': self.user_account.get_auth_token()})
+        return Response(data=data, status=status.HTTP_200_OK)
 
 
 class Login(CustomAPIView):
