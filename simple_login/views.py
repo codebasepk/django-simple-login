@@ -18,7 +18,7 @@
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #
 
-from rest_framework import status
+from rest_framework import status, permissions
 from rest_framework.response import Response
 from rest_framework.views import APIView
 
@@ -125,3 +125,51 @@ class AccountStatus(CustomAPIView):
         )
         serializer.is_valid(raise_exception=True)
         return Response(status=status.HTTP_200_OK)
+
+
+class RetrieveUpdateDestroyProfileView(APIView):
+    serializer_class = None
+    permission_classes = (permissions.IsAuthenticated, )
+    http_method_names = ['put', 'get', 'delete']
+
+    def get_auth_user(self):
+        return self.request.user
+
+    def get_serializer_class(self):
+        raise NotImplemented('Please implement this method on inheritance.')
+
+    def _get_serializer_class(self):
+        return self.serializer_class or self.get_serializer_class()
+
+    def get(self, *args, **kwargs):
+        serializer_class = self._get_serializer_class()
+        serializer = serializer_class(self.get_auth_user())
+        return Response(serializer.data, status=status.HTTP_200_OK)
+
+    def delete(self, *args, **kwargs):
+        user = self.get_auth_user()
+        user.delete()
+        return Response(status=status.HTTP_204_NO_CONTENT)
+
+    def put(self, *args, **kwargs):
+        email = self.request.data.get('email')
+        if email:
+            return Response(
+                {'email': 'Not allowed to change email.'},
+                status=status.HTTP_400_BAD_REQUEST
+            )
+        serializer_class = self._get_serializer_class()
+        serializer = serializer_class(
+            instance=self.request.user,
+            data=self.request.data,
+            partial=True
+        )
+        serializer.is_valid(raise_exception=True)
+        serializer.save()
+
+        # Make sure to hash the password, in case it was changed.
+        password = self.request.data.get('password')
+        if password:
+            self.request.user.set_password(password)
+            self.request.user.save()
+        return Response(data=serializer.data, status=status.HTTP_200_OK)
