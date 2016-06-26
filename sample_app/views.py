@@ -19,7 +19,10 @@
 #
 
 from rest_framework.generics import CreateAPIView
-from simple_login.views import RetrieveUpdateDestroyProfileView
+from simple_login.views import (
+    RetrieveUpdateDestroyProfileView,
+    AccountActivationAPIView,
+)
 
 from sample_app.serializers import UserProfileSerializer
 
@@ -31,3 +34,7 @@ class UserRegistrationView(CreateAPIView):
 class UserProfile(RetrieveUpdateDestroyProfileView):
     def get_serializer_class(self):
         return UserProfileSerializer
+
+
+class ActivateAccount(AccountActivationAPIView):
+    serializer_class = UserProfileSerializer

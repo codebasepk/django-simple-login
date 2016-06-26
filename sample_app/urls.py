@@ -21,7 +21,6 @@
 from django.conf.urls import url
 from simple_login.views import (
     RequestActivationKey,
-    ActivateAccount,
     Login,
     RequestPasswordReset,
     ChangePassword,
@@ -42,7 +41,7 @@ urlpatterns = [
     ),
     url(
         r'^api/sample/activate$',
-        ActivateAccount.as_view(user_model=UserProfile)
+        experimental_views.ActivateAccount.as_view(user_model=UserProfile)
     ),
     url(
         r'^api/sample/login$',
