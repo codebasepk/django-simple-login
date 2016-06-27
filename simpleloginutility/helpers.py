@@ -23,7 +23,6 @@ import configparser
 
 CONFIG_SECTION_DEFAULT = 'defaults'
 CONFIG_SECTION_EMAIL_CREDENTIALS = 'email_credentials'
-CONFIG_SECTION_DATABASE_CREDENTIALS = 'database_credentials'
 
 
 class ConfigHelpers:
@@ -45,12 +44,6 @@ class ConfigHelpers:
     def get_email_credential_by_key(self, key):
         return self.read_config_parameter(
             CONFIG_SECTION_EMAIL_CREDENTIALS,
-            key
-        )
-
-    def get_database_credential_by_key(self, key):
-        return self.read_config_parameter(
-            CONFIG_SECTION_DATABASE_CREDENTIALS,
             key
         )
 

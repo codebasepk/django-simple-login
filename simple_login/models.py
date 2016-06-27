@@ -38,15 +38,18 @@ KEY_DEFAULT_VALUE = -1
 def process_save(sender, instance=None, created=False, **kwargs):
     if created:
         Token.objects.create(user=instance)
-        if not instance.is_admin:
-            instance.account_activation_key = helpers.generate_random_key()
+        if instance.is_admin:
+            if not instance.is_active:
+                instance.is_active = True
+        else:
             instance.set_password(instance.password)
-            instance.is_active = False
-            instance.save()
-            helpers.send_account_activation_email(
-                instance.email,
-                instance.account_activation_key
-            )
+            if not instance.is_active:
+                instance.account_activation_key = helpers.generate_random_key()
+                helpers.send_account_activation_email(
+                    instance.email,
+                    instance.account_activation_key
+                )
+        instance.save()
 
 
 class BaseUser(AbstractBaseUser, PermissionsMixin):
@@ -56,7 +59,7 @@ class BaseUser(AbstractBaseUser, PermissionsMixin):
     password_reset_key = models.IntegerField(default=KEY_DEFAULT_VALUE)
 
     is_admin = models.BooleanField(default=False)
-    is_active = models.BooleanField(default=True)
+    is_active = models.BooleanField(default=False)
     date_joined = models.DateTimeField(auto_now_add=True, blank=False)
 
     objects = SimpleUserManager()

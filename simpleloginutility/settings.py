@@ -25,7 +25,7 @@ from simpleloginutility.helpers import ConfigHelpers
 # Build paths inside the project like this: os.path.join(BASE_DIR, ...)
 BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 
-CONFIG_FILE = os.path.expanduser('~/contact_config.ini')
+CONFIG_FILE = os.path.expanduser('~/simple_login_config.ini')
 config_helpers = ConfigHelpers(CONFIG_FILE)
 
 
