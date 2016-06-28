@@ -42,6 +42,7 @@ setup(
     url='https://github.com/byteshaft',
     author='Omer Akram',
     author_email='om26er@gmail.com',
+    keywords=['django', 'accounts'],
     classifiers=[
         'Environment :: Web Environment',
         'Framework :: Django',
