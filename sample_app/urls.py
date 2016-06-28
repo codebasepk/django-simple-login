@@ -60,6 +60,6 @@ urlpatterns = [
     ),
     url(
         r'^api/sample/me',
-        experimental_views.UserProfile.as_view()
+        experimental_views.UserProfile.as_view(user_model=UserProfile)
     ),
 ]

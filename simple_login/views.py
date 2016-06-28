@@ -29,6 +29,7 @@ from simple_login.serializers import (
     StatusSerializer,
     AccountActivationValidationSerializer,
     LoginSerializer,
+    RetrieveUpdateDestroyValidationSerializer,
 )
 from simple_login.helpers import AccountHelpers
 
@@ -43,6 +44,14 @@ class BaseAPIView(APIView):
         """Validate parameters for a request.
 
         Ensure to call super().post(*args, **kwargs) when this
+        method is over-ridden.
+        """
+        self.validate_request_parameters()
+
+    def put(self, *args, **kwargs):
+        """Validate parameters for a request.
+
+        Ensure to call super().put(*args, **kwargs) when this
         method is over-ridden.
         """
         self.validate_request_parameters()
@@ -171,6 +180,7 @@ class _AuthenticatedRequestBase(BaseAPIView):
 
 
 class RetrieveUpdateDestroyProfileView(_AuthenticatedRequestBase):
+    validation_class = RetrieveUpdateDestroyValidationSerializer
     http_method_names = ['put', 'get', 'delete']
 
     def get(self, *args, **kwargs):
@@ -184,12 +194,7 @@ class RetrieveUpdateDestroyProfileView(_AuthenticatedRequestBase):
         return Response(status=status.HTTP_204_NO_CONTENT)
 
     def put(self, *args, **kwargs):
-        email = self.request.data.get('email')
-        if email:
-            return Response(
-                {'email': 'Not allowed to change.'},
-                status=status.HTTP_403_FORBIDDEN
-            )
+        super().put(*args, **kwargs)
         serializer = self.update_fields_with_request_data()
         self.ensure_password_hashed()
         return Response(data=serializer.data, status=status.HTTP_200_OK)

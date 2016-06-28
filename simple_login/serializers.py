@@ -148,3 +148,15 @@ class StatusSerializer(CustomBaseSerializer):
         self.raise_if_user_does_not_exist()
         self.raise_if_user_not_activated()
         return attrs
+
+
+class RetrieveUpdateDestroyValidationSerializer(CustomBaseSerializer):
+    email = serializers.CharField(label='Email', required=False)
+
+    def validate(self, attrs):
+        super().validate(attrs)
+        if self.email:
+            msg = 'Not allowed to change Email.'
+            raise Forbidden(msg)
+
+        return attrs
