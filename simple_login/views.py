@@ -79,6 +79,14 @@ class BaseAPIView(APIView):
         """
         return self.serializer_class
 
+    def get_user_model(self):
+        """Return the User account model.
+
+        One may over-ride this method to return a custom
+        user account model.
+        """
+        return self.user_model
+
     def validate_request_parameters(self, raise_exception=True):
         if self.validation_class:
             serializer_class = self.validation_class
