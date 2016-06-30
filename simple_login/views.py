@@ -36,8 +36,11 @@ from simple_login.helpers import AccountHelpers
 
 class BaseAPIView(APIView):
     user_model = None
+    child_model = None
     serializer = None
+    child_serializer = None
     serializer_class = None
+    child_serializer_class = None
     validation_class = None
 
     def post(self, *args, **kwargs):
@@ -66,6 +69,8 @@ class BaseAPIView(APIView):
         return AccountHelpers(self.user_model, email)
 
     def get_user(self):
+        if not self.request.user.is_anonymous():
+            return self.get_auth_user()
         return self.user_account.user
 
     def get_auth_user(self):
@@ -79,6 +84,12 @@ class BaseAPIView(APIView):
         """
         return self.serializer_class
 
+    def get_child_serializer_class(self):
+        return self.child_serializer_class
+
+    def get_child_parent_relation_key(self):
+        return 'user'
+
     def get_user_model(self):
         """Return the User account model.
 
@@ -86,6 +97,9 @@ class BaseAPIView(APIView):
         user account model.
         """
         return self.user_model
+
+    def get_child_model(self):
+        return self.child_model
 
     def validate_request_parameters(self, raise_exception=True):
         if self.validation_class:
@@ -109,11 +123,18 @@ class RequestActivationKey(BaseAPIView):
 
 
 class UserProfileBase(BaseAPIView):
-    def get_user_profile_data_with_token(self):
+    def get_user_profile(self, token=True):
         serializer_class = self.get_serializer_class()
-        serializer = serializer_class(instance=self.user_account.user)
+        serializer = serializer_class(instance=self.get_user())
         data = serializer.data
-        data.update({'token': self.user_account.get_auth_token()})
+        if token:
+            data.update({'token': self.user_account.get_auth_token()})
+        child_serializer_class = self.get_child_serializer_class()
+        if child_serializer_class:
+            child_model = self.get_child_model()
+            instance = child_model.objects.get(user=self.get_user())
+            child_serializer = child_serializer_class(instance)
+            data.update(child_serializer.data)
         return data
 
 
@@ -123,7 +144,7 @@ class AccountActivationAPIView(UserProfileBase):
     def post(self, *args, **kwargs):
         super().post(*args, **kwargs)
         self.user_account.activate()
-        data = self.get_user_profile_data_with_token()
+        data = self.get_user_profile()
         return Response(data=data, status=status.HTTP_200_OK)
 
 
@@ -132,7 +153,7 @@ class LoginAPIView(UserProfileBase):
 
     def post(self, *args, **kwargs):
         super().post(*args, **kwargs)
-        data = self.get_user_profile_data_with_token()
+        data = self.get_user_profile()
         return Response(data=data, status=status.HTTP_200_OK)
 
 
@@ -166,8 +187,8 @@ class AccountStatus(BaseAPIView):
         return Response(status=status.HTTP_200_OK)
 
 
-class _AuthenticatedRequestBase(BaseAPIView):
-    permission_classes = (permissions.IsAuthenticated,)
+class _AuthenticatedRequestBase(UserProfileBase):
+    permission_classes = (permissions.IsAuthenticated, )
 
     def ensure_password_hashed(self):
         password = self.request.data.get('password')
@@ -192,12 +213,11 @@ class RetrieveUpdateDestroyProfileView(_AuthenticatedRequestBase):
     http_method_names = ['put', 'get', 'delete']
 
     def get(self, *args, **kwargs):
-        serializer_class = self.get_serializer_class()
-        serializer = serializer_class(self.get_auth_user())
-        return Response(serializer.data, status=status.HTTP_200_OK)
+        data = self.get_user_profile(token=False)
+        return Response(data, status=status.HTTP_200_OK)
 
     def delete(self, *args, **kwargs):
-        user = self.get_auth_user()
+        user = self.get_user()
         user.delete()
         return Response(status=status.HTTP_204_NO_CONTENT)
 
