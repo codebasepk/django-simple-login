@@ -34,7 +34,7 @@ class CustomBaseSerializer(serializers.Serializer):
         super().__init__(**kwargs)
         self.user_model = user_model
         if not self.user_model or not issubclass(self.user_model, BaseUser):
-            msg = 'user_model must inherit from ' \
+            msg = 'user_model must be an instance of ' \
                   'simple_login.models.BaseUser'
             raise serializers.ValidationError(msg)
 
