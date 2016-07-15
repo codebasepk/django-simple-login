@@ -66,6 +66,8 @@ class BaseAPIView(APIView):
         return AccountHelpers(self.user_model, email)
 
     def get_user(self):
+        if not self.request.user.is_anonymous():
+            return self.request.user
         return self.user_account.user
 
     def get_auth_user(self):
