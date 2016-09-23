@@ -46,5 +46,5 @@ setup(
     author_email='om26er@gmail.com',
     keywords=['django', 'accounts'],
     classifiers=[],
-    install_requires=['django'],
+    install_requires=['django', 'djangorestframework'],
 )
