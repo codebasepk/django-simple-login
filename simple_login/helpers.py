@@ -46,7 +46,9 @@ def _send_account_activation_email(email, key):
 
 def send_account_activation_email(email, key):
     thread = threading.Thread(
-        target=_send_account_activation_email, args=(email, key))
+        target=_send_account_activation_email,
+        args=(email, key)
+    )
     thread.start()
 
 
@@ -62,7 +64,9 @@ def _send_password_reset_email(email, key):
 
 def send_password_reset_email(email, key):
     thread = threading.Thread(
-        target=_send_password_reset_email, args=(email, key))
+        target=_send_password_reset_email,
+        args=(email, key)
+    )
     thread.start()
 
 
