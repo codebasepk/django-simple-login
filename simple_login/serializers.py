@@ -27,16 +27,22 @@ from simple_login.exceptions import NotModified, Forbidden
 from simple_login.models import BaseUser, KEY_DEFAULT_VALUE
 
 
-class CustomBaseSerializer(serializers.Serializer):
+class _BaseSerializer(serializers.Serializer):
     email = None
 
     def __init__(self, user_model, **kwargs):
         super().__init__(**kwargs)
+        if not issubclass(self.user_model, BaseUser):
+            raise serializers.ValidationError(
+                'user_model must be a subclass of simple_login.models.BaseUser'
+            )
         self.user_model = user_model
-        if not self.user_model or not issubclass(self.user_model, BaseUser):
-            msg = 'user_model must be an instance of ' \
-                  'simple_login.models.BaseUser'
-            raise serializers.ValidationError(msg)
+
+    def create(self, validated_data):
+        pass
+
+    def update(self, instance, validated_data):
+        pass
 
     def validate(self, attrs):
         """A common call that's part of every request."""
@@ -46,23 +52,22 @@ class CustomBaseSerializer(serializers.Serializer):
         try:
             return self.user_model.objects.get(email=self.email)
         except self.user_model.DoesNotExist:
-            msg = 'User with email \'{}\' does not exist.'.format(self.email)
-            raise drf_exceptions.NotFound(msg)
+            raise drf_exceptions.NotFound(
+                'User with email \'{}\' does not exist.'.format(self.email)
+            )
 
     def raise_if_user_already_activated(self):
         user = self.user_model.objects.get(email=self.email)
         if user.is_active:
-            msg = 'User already activated.'
-            raise NotModified(msg)
+            raise NotModified('User already activated.')
 
     def raise_if_user_not_activated(self):
         user = self.user_model.objects.get(email=self.email)
         if not user.is_active:
-            msg = 'User not active.'
-            raise Forbidden(msg)
+            raise Forbidden('User not active.')
 
 
-class ActivationKeyRequestSerializer(CustomBaseSerializer):
+class ActivationKeyRequestSerializer(_BaseSerializer):
     email = serializers.EmailField(label='Email')
 
     def validate(self, attrs):
@@ -72,7 +77,7 @@ class ActivationKeyRequestSerializer(CustomBaseSerializer):
         return attrs
 
 
-class AccountActivationValidationSerializer(CustomBaseSerializer):
+class AccountActivationValidationSerializer(_BaseSerializer):
     email = serializers.EmailField(label='Email')
     activation_key = serializers.IntegerField(label='Activation key')
 
@@ -80,8 +85,7 @@ class AccountActivationValidationSerializer(CustomBaseSerializer):
         user = self.user_model.objects.get(email=self.email)
         key = user.account_activation_key
         if key == KEY_DEFAULT_VALUE or key != int(self.activation_key):
-            msg = 'Invalid activation key.'
-            raise serializers.ValidationError(msg)
+            raise serializers.ValidationError('Invalid activation key.')
 
     def validate(self, attrs):
         super().validate(attrs)
@@ -92,15 +96,14 @@ class AccountActivationValidationSerializer(CustomBaseSerializer):
         return attrs
 
 
-class LoginSerializer(CustomBaseSerializer):
+class LoginSerializer(_BaseSerializer):
     email = serializers.EmailField(label='Email')
     password = serializers.CharField(label='Password')
 
     def _raise_if_password_invalid(self):
         user = self.user_model.objects.get(email=self.email)
         if not user.check_password(self.password):
-            msg = 'Invalid password.'
-            raise drf_exceptions.AuthenticationFailed(msg)
+            raise drf_exceptions.AuthenticationFailed('Invalid password.')
 
     def validate(self, attrs):
         super().validate(attrs)
@@ -111,7 +114,7 @@ class LoginSerializer(CustomBaseSerializer):
         return attrs
 
 
-class PasswordResetRequestSerializer(CustomBaseSerializer):
+class PasswordResetRequestSerializer(_BaseSerializer):
     email = serializers.EmailField(label='Email')
 
     def validate(self, attrs):
@@ -120,7 +123,7 @@ class PasswordResetRequestSerializer(CustomBaseSerializer):
         return attrs
 
 
-class PasswordChangeSerializer(CustomBaseSerializer):
+class PasswordChangeSerializer(_BaseSerializer):
     email = serializers.EmailField(label='Email')
     password_reset_key = serializers.IntegerField(label='Password reset key')
     new_password = serializers.CharField(label='New password')
@@ -129,8 +132,7 @@ class PasswordChangeSerializer(CustomBaseSerializer):
         user = self.user_model.objects.get(email=self.email)
         key = user.password_reset_key
         if key == KEY_DEFAULT_VALUE or key != int(self.password_reset_key):
-            msg = 'Invalid password reset key.'
-            raise serializers.ValidationError(msg)
+            raise serializers.ValidationError('Invalid password reset key.')
 
     def validate(self, attrs):
         super().validate(attrs)
@@ -140,7 +142,7 @@ class PasswordChangeSerializer(CustomBaseSerializer):
         return attrs
 
 
-class StatusSerializer(CustomBaseSerializer):
+class StatusSerializer(_BaseSerializer):
     email = serializers.EmailField(label='Email')
 
     def validate(self, attrs):
@@ -150,13 +152,11 @@ class StatusSerializer(CustomBaseSerializer):
         return attrs
 
 
-class RetrieveUpdateDestroyValidationSerializer(CustomBaseSerializer):
+class RetrieveUpdateDestroyValidationSerializer(_BaseSerializer):
     email = serializers.CharField(label='Email', required=False)
 
     def validate(self, attrs):
         super().validate(attrs)
         if self.email:
-            msg = 'Not allowed to change Email.'
-            raise Forbidden(msg)
-
+            raise Forbidden('Not allowed to change Email.')
         return attrs
