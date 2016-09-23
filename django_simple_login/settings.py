@@ -20,7 +20,7 @@
 
 import os
 
-from simpleloginutility.helpers import ConfigHelpers
+from django_simple_login.helpers import ConfigHelpers
 
 BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 CONFIG_FILE = os.path.expanduser('~/simple_login_config.ini')
@@ -80,7 +80,7 @@ REST_FRAMEWORK = {
     )
 }
 
-WSGI_APPLICATION = 'django-simple-login.wsgi.application'
+WSGI_APPLICATION = 'django_simple_login.wsgi.application'
 APP_NAME = 'Simple Login'
 
 DATABASES = {
