@@ -44,7 +44,7 @@ class BaseAPIView(APIView):
         """Validate parameters for a request.
 
         Ensure to call super().post(*args, **kwargs) when this method is
-        over-ridden.
+        overridden.
         """
         self.validate_request_parameters()
 
@@ -52,7 +52,7 @@ class BaseAPIView(APIView):
         """Validate parameters for a request.
 
         Ensure to call super().put(*args, **kwargs) when this method is
-        over-ridden.
+        overridden.
         """
         self.validate_request_parameters()
 
@@ -74,14 +74,14 @@ class BaseAPIView(APIView):
     def get_serializer_class(self):
         """Return the data serializer class.
 
-        One may over-ride this method to return custom serializer class.
+        One may override this method to return custom serializer class.
         """
         return self.serializer_class
 
     def get_user_model(self):
         """Return the User account model.
 
-        One may over-ride this method to return a custom user account model.
+        One may override this method to return a custom user account model.
         """
         return self.user_model
 
