@@ -32,15 +32,15 @@ with open(os.path.join(os.path.dirname(__file__), 'README.rst')) as readme:
 os.chdir(os.path.normpath(os.path.join(os.path.abspath(__file__), os.pardir)))
 
 setup(
-    name='django_simple_login',
+    name='django-simple-login',
     version='0.4.0',
     packages=find_packages(),
     include_package_data=True,
     license='GNU GPL Version 3',
     description='A simple django app to make accounts creation a breeze.',
     long_description=README,
-    url='https://github.com/byteshaft/django_simple_login',
-    download_url='https://github.com/byteShaft/django_simple_login/tarball/'
+    url='https://github.com/byteshaft/django-simple-login',
+    download_url='https://github.com/byteShaft/django-simple-login/tarball/'
                  '0.4.0',
     author='Omer Akram',
     author_email='om26er@gmail.com',
