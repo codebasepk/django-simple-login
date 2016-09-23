@@ -23,7 +23,6 @@ import threading
 
 from django.conf import settings
 from django.core.mail import send_mail
-
 from rest_framework.authtoken.models import Token
 
 KEY_DEFAULT_VALUE = -1
