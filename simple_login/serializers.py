@@ -158,5 +158,5 @@ class RetrieveUpdateDestroyValidationSerializer(_BaseSerializer):
     def validate(self, attrs):
         super().validate(attrs)
         if self.email:
-            raise Forbidden('Not allowed to change Email.')
+            raise Forbidden('Not allowed to change email.')
         return attrs
