@@ -20,7 +20,7 @@
 
 from rest_framework.generics import CreateAPIView
 from simple_login.views import (
-    RetrieveUpdateDestroyProfileView,
+    RetrieveUpdateDestroyProfileAPIView,
     AccountActivationAPIView,
     LoginAPIView,
 )
@@ -32,7 +32,7 @@ class RegisterUser(CreateAPIView):
     serializer_class = UserProfileSerializer
 
 
-class UserProfile(RetrieveUpdateDestroyProfileView):
+class UserProfile(RetrieveUpdateDestroyProfileAPIView):
     serializer_class = UserProfileSerializer
 
 

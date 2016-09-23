@@ -97,7 +97,7 @@ class BaseAPIView(APIView):
         self.serializer.is_valid(raise_exception=raise_exception)
 
 
-class RequestActivationKey(BaseAPIView):
+class ActivationKeyRequestAPIView(BaseAPIView):
     validation_class = ActivationKeyRequestSerializer
 
     def post(self, *args, **kwargs):
@@ -106,7 +106,7 @@ class RequestActivationKey(BaseAPIView):
         return Response(status=status.HTTP_200_OK)
 
 
-class UserProfileBase(BaseAPIView):
+class _UserProfileBaseAPIView(BaseAPIView):
     def get_user_profile_data_with_token(self):
         serializer_class = self.get_serializer_class()
         serializer = serializer_class(instance=self.user_account.user)
@@ -115,23 +115,27 @@ class UserProfileBase(BaseAPIView):
         return data
 
 
-class AccountActivationAPIView(UserProfileBase):
+class AccountActivationAPIView(_UserProfileBaseAPIView):
     validation_class = AccountActivationValidationSerializer
 
     def post(self, *args, **kwargs):
         super().post(*args, **kwargs)
         self.user_account.activate()
-        data = self.get_user_profile_data_with_token()
-        return Response(data=data, status=status.HTTP_200_OK)
+        return Response(
+            data=self.get_user_profile_data_with_token(),
+            status=status.HTTP_200_OK
+        )
 
 
-class LoginAPIView(UserProfileBase):
+class LoginAPIView(_UserProfileBaseAPIView):
     validation_class = LoginSerializer
 
     def post(self, *args, **kwargs):
         super().post(*args, **kwargs)
-        data = self.get_user_profile_data_with_token()
-        return Response(data=data, status=status.HTTP_200_OK)
+        return Response(
+            data=self.get_user_profile_data_with_token(),
+            status=status.HTTP_200_OK
+        )
 
 
 class RequestPasswordReset(BaseAPIView):
@@ -146,13 +150,11 @@ class RequestPasswordReset(BaseAPIView):
 class ChangePassword(BaseAPIView):
     validation_class = PasswordChangeSerializer
 
-    def change(self):
-        new_password = self.serializer.data.get('new_password')
-        self.user_account.change_password(new_password)
-
     def post(self, *args, **kwargs):
         super().post(*args, **kwargs)
-        self.change()
+        self.user_account.change_password(
+            self.serializer.data.get('new_password')
+        )
         return Response(status=status.HTTP_200_OK)
 
 
@@ -165,7 +167,7 @@ class AccountStatus(BaseAPIView):
 
 
 class _AuthenticatedRequestBase(BaseAPIView):
-    permission_classes = (permissions.IsAuthenticated,)
+    permission_classes = (permissions.IsAuthenticated, )
 
     def ensure_password_hashed(self):
         password = self.request.data.get('password')
@@ -185,7 +187,7 @@ class _AuthenticatedRequestBase(BaseAPIView):
         return serializer
 
 
-class RetrieveUpdateDestroyProfileView(_AuthenticatedRequestBase):
+class RetrieveUpdateDestroyProfileAPIView(_AuthenticatedRequestBase):
     validation_class = RetrieveUpdateDestroyValidationSerializer
     http_method_names = ['put', 'get', 'delete']
 

@@ -20,7 +20,7 @@
 
 from django.conf.urls import url
 from simple_login.views import (
-    RequestActivationKey,
+    ActivationKeyRequestAPIView,
     RequestPasswordReset,
     ChangePassword,
     AccountStatus,
@@ -36,7 +36,7 @@ urlpatterns = [
     ),
     url(
         r'^api/sample/request$',
-        RequestActivationKey.as_view(user_model=UserProfile)
+        ActivationKeyRequestAPIView.as_view(user_model=UserProfile)
     ),
     url(
         r'^api/sample/activate$',
