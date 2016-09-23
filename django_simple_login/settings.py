@@ -54,7 +54,7 @@ MIDDLEWARE_CLASSES = [
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
 ]
 
-ROOT_URLCONF = 'simpleloginutility.urls'
+ROOT_URLCONF = 'django_simple_login.urls'
 AUTH_USER_MODEL = 'sample_app.UserProfile'
 
 TEMPLATES = [
