@@ -33,14 +33,14 @@ os.chdir(os.path.normpath(os.path.join(os.path.abspath(__file__), os.pardir)))
 
 setup(
     name='django-simple-login',
-    version='0.2',
+    version='0.3',
     packages=find_packages(),
     include_package_data=True,
     license='GNU GPL Version 3',
     description='A simple django app to make accounts creation a breeze.',
     long_description=README,
     url='https://github.com/byteshaft/django-simplelogin',
-    download_url='https://github.com/byteShaft/django-simplelogin/tarball/0.2',
+    download_url='https://github.com/byteShaft/django-simplelogin/tarball/0.3',
     author='Omer Akram',
     author_email='om26er@gmail.com',
     keywords=['django', 'accounts'],
