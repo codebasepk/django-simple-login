@@ -80,7 +80,7 @@ REST_FRAMEWORK = {
     )
 }
 
-WSGI_APPLICATION = 'simpleloginutility.wsgi.application'
+WSGI_APPLICATION = 'django-simple-login.wsgi.application'
 APP_NAME = 'Simple Login'
 
 DATABASES = {
