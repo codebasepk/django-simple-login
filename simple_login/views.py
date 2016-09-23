@@ -138,7 +138,7 @@ class LoginAPIView(_UserProfileBaseAPIView):
         )
 
 
-class RequestPasswordReset(BaseAPIView):
+class PasswordResetRequestAPIView(BaseAPIView):
     validation_class = PasswordResetRequestSerializer
 
     def post(self, *args, **kwargs):
@@ -147,7 +147,7 @@ class RequestPasswordReset(BaseAPIView):
         return Response(status=status.HTTP_200_OK)
 
 
-class ChangePassword(BaseAPIView):
+class PasswordChangeAPIView(BaseAPIView):
     validation_class = PasswordChangeSerializer
 
     def post(self, *args, **kwargs):
@@ -158,7 +158,7 @@ class ChangePassword(BaseAPIView):
         return Response(status=status.HTTP_200_OK)
 
 
-class AccountStatus(BaseAPIView):
+class StatusAPIView(BaseAPIView):
     validation_class = StatusSerializer
 
     def post(self, *args, **kwargs):
