@@ -25,12 +25,9 @@ from simple_login.utils.email import (
 from simple_login.utils.randomizer import generate_random_key
 from simple_login.utils.user import UserHelpers
 
-KEY_DEFAULT_VALUE = -1
-
 __all__ = [
     'send_activation_email',
     'send_password_reset_email',
     'generate_random_key',
     'UserHelpers',
-    'KEY_DEFAULT_VALUE'
 ]

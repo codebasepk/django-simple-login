@@ -20,11 +20,11 @@
 
 from rest_framework.authtoken.models import Token
 
+from simple_login import KEY_DEFAULT_VALUE
 from simple_login.utils import (
     generate_random_key,
     send_password_reset_email,
     send_activation_email,
-    KEY_DEFAULT_VALUE,
 )
 
 
