@@ -1,19 +1,19 @@
-from simple_login.views.api import (
-    ActivationKeyRequestAPIView,
-    RetrieveUpdateDestroyProfileAPIView,
-    ActivationAPIView,
-    LoginAPIView,
-    PasswordResetRequestAPIView,
-    PasswordChangeAPIView,
-    StatusAPIView,
+from simple_login.serializers.api import (
+    ActivationKeyRequestSerializer,
+    ActivationValidationSerializer,
+    LoginSerializer,
+    PasswordResetRequestSerializer,
+    PasswordChangeSerializer,
+    StatusSerializer,
+    RetrieveUpdateDestroyProfileValidationSerializer,
 )
 
 __all__ = [
-    'ActivationKeyRequestAPIView',
-    'RetrieveUpdateDestroyProfileAPIView',
-    'ActivationAPIView',
-    'LoginAPIView',
-    'PasswordResetRequestAPIView',
-    'PasswordChangeAPIView',
-    'StatusAPIView',
+    'ActivationKeyRequestSerializer',
+    'ActivationValidationSerializer',
+    'LoginSerializer',
+    'PasswordResetRequestSerializer',
+    'PasswordChangeSerializer',
+    'StatusSerializer',
+    'RetrieveUpdateDestroyProfileValidationSerializer',
 ]

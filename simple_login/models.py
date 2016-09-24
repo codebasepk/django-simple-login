@@ -28,7 +28,7 @@ from django.db.models.signals import post_save
 from django.dispatch import receiver
 from rest_framework.authtoken.models import Token
 
-from simple_login import helpers
+from simple_login.utils import generate_random_key, send_activation_email
 from simple_login.managers import SimpleUserManager
 
 KEY_DEFAULT_VALUE = -1
@@ -44,8 +44,8 @@ def process_save(sender, instance=None, created=False, **kwargs):
         else:
             instance.set_password(instance.password)
             if not instance.is_active:
-                instance.account_activation_key = helpers.generate_random_key()
-                helpers.send_account_activation_email(
+                instance.account_activation_key = generate_random_key()
+                send_activation_email(
                     instance.email,
                     instance.account_activation_key
                 )
