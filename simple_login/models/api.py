@@ -26,10 +26,9 @@ from django.contrib.auth.models import (
 from django.db import models
 from django.db.models.signals import post_save
 
+from simple_login import KEY_DEFAULT_VALUE
 from simple_login.managers import SimpleUserManager
 from simple_login.models.utils import process_save
-
-KEY_DEFAULT_VALUE = -1
 
 
 class BaseUser(AbstractBaseUser, PermissionsMixin):

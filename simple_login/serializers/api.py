@@ -23,10 +23,9 @@ from rest_framework import (
     serializers
 )
 
+from simple_login import KEY_DEFAULT_VALUE
 from simple_login.serializers.base import BaseSerializer
 from simple_login.exceptions import Forbidden
-
-KEY_DEFAULT_VALUE = -1
 
 
 class ActivationKeyRequestSerializer(BaseSerializer):
