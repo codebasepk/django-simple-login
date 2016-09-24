@@ -18,17 +18,9 @@
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #
 
-from rest_framework import (
-    exceptions as drf_exceptions,
-    status,
-)
+import random
 
 
-class NotModified(drf_exceptions.APIException):
-    status_code = status.HTTP_304_NOT_MODIFIED
-    default_detail = 'Nothing to change.'
-
-
-class Forbidden(drf_exceptions.APIException):
-    status_code = status.HTTP_403_FORBIDDEN
-    default_detail = 'Not allowed.'
+def generate_random_key():
+    # Ensures the returned number is always 5 numbers long.
+    return random.randint(10000, 99999)

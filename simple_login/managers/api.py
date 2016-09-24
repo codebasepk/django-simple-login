@@ -20,20 +20,13 @@
 
 from django.contrib.auth.models import BaseUserManager
 
-
-def _raise_if_email_or_password_missing(email, password):
-    if not email and not password:
-        raise ValueError('email and password are mandatory.')
-    if not email:
-        raise ValueError('email is mandatory.')
-    if not password:
-        raise ValueError('password is mandatory.')
+from simple_login.managers.utils import raise_if_email_or_password_missing
 
 
 class SimpleUserManager(BaseUserManager):
 
     def create_user(self, email, password=None, **extra_fields):
-        _raise_if_email_or_password_missing(email, password)
+        raise_if_email_or_password_missing(email, password)
         user = self.model(email=email, **extra_fields)
         user.set_password(password)
         user.save(using=self._db)

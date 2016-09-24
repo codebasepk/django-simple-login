@@ -19,47 +19,26 @@
 #
 
 from django.conf.urls import url
-from simple_login.views import (
-    ActivationKeyRequestAPIView,
-    RequestPasswordReset,
+
+from sample_app.views import (
+    ActivationKeyRequest,
+    ForgotPassword,
     ChangePassword,
-    AccountStatus,
+    Register,
+    Login,
+    Activate,
+    Profile,
+    StatusAPIView
 )
-from sample_app import views as experimental_views
-from sample_app.models import UserProfile
 
 
 urlpatterns = [
-    url(
-        r'^api/sample/register$',
-        experimental_views.RegisterUser.as_view()
-    ),
-    url(
-        r'^api/sample/request$',
-        ActivationKeyRequestAPIView.as_view(user_model=UserProfile)
-    ),
-    url(
-        r'^api/sample/activate$',
-        experimental_views.ActivateAccount.as_view(user_model=UserProfile)
-    ),
-    url(
-        r'^api/sample/login$',
-        experimental_views.Login.as_view(user_model=UserProfile)
-    ),
-    url(
-        r'^api/sample/reset$',
-        RequestPasswordReset.as_view(user_model=UserProfile)
-    ),
-    url(
-        r'^api/sample/change$',
-        ChangePassword.as_view(user_model=UserProfile)
-    ),
-    url(
-        r'^api/sample/status$',
-        AccountStatus.as_view(user_model=UserProfile)
-    ),
-    url(
-        r'^api/sample/me',
-        experimental_views.UserProfile.as_view(user_model=UserProfile)
-    ),
+    url(r'^api/user/register$', Register.as_view()),
+    url(r'^api/user/request-activation-key$', ActivationKeyRequest.as_view()),
+    url(r'^api/user/activate$', Activate.as_view()),
+    url(r'^api/user/login$', Login.as_view()),
+    url(r'^api/user/forgot-password$', ForgotPassword.as_view()),
+    url(r'^api/user/change-password$', ChangePassword.as_view()),
+    url(r'^api/user/status$', StatusAPIView.as_view()),
+    url(r'^api/me$', Profile.as_view()),
 ]

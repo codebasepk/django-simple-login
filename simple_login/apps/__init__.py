@@ -18,13 +18,6 @@
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #
 
-from django.contrib import admin
+from simple_login.apps.config import SimpleLoginConfig
 
-from sample_app.models import User
-
-
-class UserAdmin(admin.ModelAdmin):
-    class Meta:
-        model = User
-
-admin.site.register(User, UserAdmin)
+__all__ = ['SimpleLoginConfig']

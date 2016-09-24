@@ -18,13 +18,19 @@
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #
 
-from django.contrib import admin
+from simple_login.utils.email import (
+    send_activation_email,
+    send_password_reset_email
+)
+from simple_login.utils.randomizer import generate_random_key
+from simple_login.utils.user import UserHelpers
 
-from sample_app.models import User
+KEY_DEFAULT_VALUE = -1
 
-
-class UserAdmin(admin.ModelAdmin):
-    class Meta:
-        model = User
-
-admin.site.register(User, UserAdmin)
+__all__ = [
+    'send_activation_email',
+    'send_password_reset_email',
+    'generate_random_key',
+    'UserHelpers',
+    'KEY_DEFAULT_VALUE'
+]

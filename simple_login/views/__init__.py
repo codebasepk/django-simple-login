@@ -18,13 +18,22 @@
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #
 
-from django.contrib import admin
+from simple_login.views.api import (
+    ActivationAPIView,
+    ActivationKeyRequestAPIView,
+    LoginAPIView,
+    PasswordResetRequestAPIView,
+    PasswordChangeAPIView,
+    StatusAPIView,
+    RetrieveUpdateDestroyProfileAPIView,
+)
 
-from sample_app.models import User
-
-
-class UserAdmin(admin.ModelAdmin):
-    class Meta:
-        model = User
-
-admin.site.register(User, UserAdmin)
+__all__ = [
+    'ActivationAPIView',
+    'ActivationKeyRequestAPIView',
+    'LoginAPIView',
+    'PasswordResetRequestAPIView',
+    'PasswordChangeAPIView',
+    'StatusAPIView',
+    'RetrieveUpdateDestroyProfileAPIView',
+]

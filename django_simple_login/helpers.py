@@ -23,17 +23,15 @@ import configparser
 
 CONFIG_SECTION_DEFAULT = 'defaults'
 CONFIG_SECTION_EMAIL_CREDENTIALS = 'email_credentials'
+CONFIG_SECTION_DATABASE_CREDENTIALS = 'database_credentials'
 
 
 class ConfigHelpers:
-
     def __init__(self, config_file):
-        self.config_file = config_file
-        if os.path.isfile(self.config_file):
-            self.config = configparser.ConfigParser()
-            self.config.read(self.config_file)
-        else:
+        if not os.path.isfile(config_file):
             raise RuntimeError('Config file does not exist.')
+        self.config = configparser.ConfigParser()
+        self.config.read(config_file)
 
     def read_config_parameter(self, config_section, config_key):
         try:
@@ -44,6 +42,12 @@ class ConfigHelpers:
     def get_email_credential_by_key(self, key):
         return self.read_config_parameter(
             CONFIG_SECTION_EMAIL_CREDENTIALS,
+            key
+        )
+
+    def get_database_credential_by_key(self, key):
+        return self.read_config_parameter(
+            CONFIG_SECTION_DATABASE_CREDENTIALS,
             key
         )
 

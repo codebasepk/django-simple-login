@@ -18,20 +18,10 @@
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #
 
-from rest_framework import status, permissions
-from rest_framework.response import Response
+from rest_framework import permissions
 from rest_framework.views import APIView
 
-from simple_login.serializers import (
-    ActivationKeyRequestSerializer,
-    PasswordResetRequestSerializer,
-    PasswordChangeSerializer,
-    StatusSerializer,
-    AccountActivationValidationSerializer,
-    LoginSerializer,
-    RetrieveUpdateDestroyValidationSerializer,
-)
-from simple_login.helpers import AccountHelpers
+from simple_login.utils import UserHelpers
 
 
 class BaseAPIView(APIView):
@@ -61,11 +51,11 @@ class BaseAPIView(APIView):
         """Return account helpers object by reading email from serializer
         data."""
         email = self.serializer.data.get('email')
-        return AccountHelpers(self.user_model, email)
+        return UserHelpers(self.user_model, email)
 
     def get_user(self):
         if not self.request.user.is_anonymous():
-            return self.request.user
+            return self.get_auth_user()
         return self.user_account.user
 
     def get_auth_user(self):
@@ -78,6 +68,9 @@ class BaseAPIView(APIView):
         """
         return self.serializer_class
 
+    def get_validation_class(self):
+        return self.validation_class
+
     def get_user_model(self):
         """Return the User account model.
 
@@ -87,7 +80,7 @@ class BaseAPIView(APIView):
 
     def validate_request_parameters(self, raise_exception=True):
         if self.validation_class:
-            serializer_class = self.validation_class
+            serializer_class = self.get_validation_class()
         else:
             serializer_class = self.get_serializer_class()
         self.serializer = serializer_class(
@@ -97,16 +90,7 @@ class BaseAPIView(APIView):
         self.serializer.is_valid(raise_exception=raise_exception)
 
 
-class ActivationKeyRequestAPIView(BaseAPIView):
-    validation_class = ActivationKeyRequestSerializer
-
-    def post(self, *args, **kwargs):
-        super().post(*args, **kwargs)
-        self.user_account.generate_and_send_account_activation_key()
-        return Response(status=status.HTTP_200_OK)
-
-
-class _UserProfileBaseAPIView(BaseAPIView):
+class ProfileBaseAPIView(BaseAPIView):
     def get_user_profile_data_with_token(self):
         serializer_class = self.get_serializer_class()
         serializer = serializer_class(instance=self.user_account.user)
@@ -115,58 +99,7 @@ class _UserProfileBaseAPIView(BaseAPIView):
         return data
 
 
-class AccountActivationAPIView(_UserProfileBaseAPIView):
-    validation_class = AccountActivationValidationSerializer
-
-    def post(self, *args, **kwargs):
-        super().post(*args, **kwargs)
-        self.user_account.activate()
-        return Response(
-            data=self.get_user_profile_data_with_token(),
-            status=status.HTTP_200_OK
-        )
-
-
-class LoginAPIView(_UserProfileBaseAPIView):
-    validation_class = LoginSerializer
-
-    def post(self, *args, **kwargs):
-        super().post(*args, **kwargs)
-        return Response(
-            data=self.get_user_profile_data_with_token(),
-            status=status.HTTP_200_OK
-        )
-
-
-class RequestPasswordReset(BaseAPIView):
-    validation_class = PasswordResetRequestSerializer
-
-    def post(self, *args, **kwargs):
-        super().post(*args, **kwargs)
-        self.user_account.generate_and_send_password_reset_key()
-        return Response(status=status.HTTP_200_OK)
-
-
-class ChangePassword(BaseAPIView):
-    validation_class = PasswordChangeSerializer
-
-    def post(self, *args, **kwargs):
-        super().post(*args, **kwargs)
-        self.user_account.change_password(
-            self.serializer.data.get('new_password')
-        )
-        return Response(status=status.HTTP_200_OK)
-
-
-class AccountStatus(BaseAPIView):
-    validation_class = StatusSerializer
-
-    def post(self, *args, **kwargs):
-        super().post(*args, **kwargs)
-        return Response(status=status.HTTP_200_OK)
-
-
-class _AuthenticatedRequestBase(BaseAPIView):
+class AuthenticatedRequestBaseAPIView(BaseAPIView):
     permission_classes = (permissions.IsAuthenticated, )
 
     def ensure_password_hashed(self):
@@ -185,24 +118,3 @@ class _AuthenticatedRequestBase(BaseAPIView):
         serializer.is_valid(raise_exception=True)
         serializer.save()
         return serializer
-
-
-class RetrieveUpdateDestroyProfileAPIView(_AuthenticatedRequestBase):
-    validation_class = RetrieveUpdateDestroyValidationSerializer
-    http_method_names = ['put', 'get', 'delete']
-
-    def get(self, *args, **kwargs):
-        serializer_class = self.get_serializer_class()
-        serializer = serializer_class(self.get_auth_user())
-        return Response(serializer.data, status=status.HTTP_200_OK)
-
-    def delete(self, *args, **kwargs):
-        user = self.get_auth_user()
-        user.delete()
-        return Response(status=status.HTTP_204_NO_CONTENT)
-
-    def put(self, *args, **kwargs):
-        super().put(*args, **kwargs)
-        serializer = self.update_fields_with_request_data()
-        self.ensure_password_hashed()
-        return Response(data=serializer.data, status=status.HTTP_200_OK)

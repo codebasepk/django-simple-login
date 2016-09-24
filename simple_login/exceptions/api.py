@@ -18,13 +18,19 @@
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #
 
-from django.contrib import admin
+from rest_framework.status import (
+    HTTP_304_NOT_MODIFIED,
+    HTTP_403_FORBIDDEN,
+)
 
-from sample_app.models import User
+from simple_login.exceptions.base import BaseException
 
 
-class UserAdmin(admin.ModelAdmin):
-    class Meta:
-        model = User
+class NotModified(BaseException):
+    status_code = HTTP_304_NOT_MODIFIED
+    default_detail = 'Nothing to change.'
 
-admin.site.register(User, UserAdmin)
+
+class Forbidden(BaseException):
+    status_code = HTTP_403_FORBIDDEN
+    default_detail = 'Not allowed.'

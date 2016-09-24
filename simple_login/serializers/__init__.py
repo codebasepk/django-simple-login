@@ -18,13 +18,22 @@
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #
 
-import os
-
-from django.core.wsgi import get_wsgi_application
-
-os.environ.setdefault(
-    'DJANGO_SETTINGS_MODULE',
-    'simpleloginutility.settings'
+from simple_login.serializers.api import (
+    ActivationKeyRequestSerializer,
+    ActivationValidationSerializer,
+    LoginSerializer,
+    PasswordResetRequestSerializer,
+    PasswordChangeSerializer,
+    StatusSerializer,
+    RetrieveUpdateDestroyProfileValidationSerializer,
 )
 
-application = get_wsgi_application()
+__all__ = [
+    'ActivationKeyRequestSerializer',
+    'ActivationValidationSerializer',
+    'LoginSerializer',
+    'PasswordResetRequestSerializer',
+    'PasswordChangeSerializer',
+    'StatusSerializer',
+    'RetrieveUpdateDestroyProfileValidationSerializer',
+]

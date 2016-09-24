@@ -18,13 +18,13 @@
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #
 
-from django.contrib import admin
+import os
 
-from sample_app.models import User
+from django.core.wsgi import get_wsgi_application
 
+os.environ.setdefault(
+    'DJANGO_SETTINGS_MODULE',
+    'django_simple_login.settings'
+)
 
-class UserAdmin(admin.ModelAdmin):
-    class Meta:
-        model = User
-
-admin.site.register(User, UserAdmin)
+application = get_wsgi_application()

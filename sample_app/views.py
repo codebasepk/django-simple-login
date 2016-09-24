@@ -19,26 +19,55 @@
 #
 
 from rest_framework.generics import CreateAPIView
+
 from simple_login.views import (
+    ActivationKeyRequestAPIView,
     RetrieveUpdateDestroyProfileAPIView,
-    AccountActivationAPIView,
+    ActivationAPIView,
     LoginAPIView,
+    PasswordResetRequestAPIView,
+    PasswordChangeAPIView,
+    StatusAPIView,
 )
 
-from sample_app.serializers import UserProfileSerializer
+from sample_app.models import User
+from sample_app.serializers import UserSerializer
 
 
-class RegisterUser(CreateAPIView):
-    serializer_class = UserProfileSerializer
+class Register(CreateAPIView):
+    serializer_class = UserSerializer
 
 
-class UserProfile(RetrieveUpdateDestroyProfileAPIView):
-    serializer_class = UserProfileSerializer
+class Activate(ActivationAPIView):
+    user_model = User
+    serializer_class = UserSerializer
 
 
-class ActivateAccount(AccountActivationAPIView):
-    serializer_class = UserProfileSerializer
+class ActivationKeyRequest(ActivationKeyRequestAPIView):
+    user_model = User
+    serializer_class = UserSerializer
 
 
 class Login(LoginAPIView):
-    serializer_class = UserProfileSerializer
+    user_model = User
+    serializer_class = UserSerializer
+
+
+class Profile(RetrieveUpdateDestroyProfileAPIView):
+    user_model = User
+    serializer_class = UserSerializer
+
+
+class ForgotPassword(PasswordResetRequestAPIView):
+    user_model = User
+    serializer_class = UserSerializer
+
+
+class ChangePassword(PasswordChangeAPIView):
+    user_model = User
+    serializer_class = UserSerializer
+
+
+class Status(StatusAPIView):
+    user_model = User
+    serializer_class = UserSerializer

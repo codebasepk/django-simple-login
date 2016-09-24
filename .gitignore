@@ -8,7 +8,7 @@ django_simple_login.egg-info/
 sample_app/__pycache__/
 sample_app/migrations/
 simple_login/__pycache__/
-simpleloginutility/__pycache__/
+django_simple_login/__pycache__/
 tests/__pycache__/
 tests/integration/__pycache__/
 tests/unit/__pycache__/

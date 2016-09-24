@@ -18,13 +18,9 @@
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #
 
-from django.contrib import admin
-
-from sample_app.models import User
+from rest_framework.exceptions import APIException
 
 
-class UserAdmin(admin.ModelAdmin):
-    class Meta:
-        model = User
-
-admin.site.register(User, UserAdmin)
+class BaseException(APIException):
+    def __init__(self, detail=None):
+        super().__init__(detail)
