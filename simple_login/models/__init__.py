@@ -18,17 +18,6 @@
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #
 
-from rest_framework import (
-    exceptions as drf_exceptions,
-    status,
-)
+from simple_login.models.api import BaseUser
 
-
-class NotModified(drf_exceptions.APIException):
-    status_code = status.HTTP_304_NOT_MODIFIED
-    default_detail = 'Nothing to change.'
-
-
-class Forbidden(drf_exceptions.APIException):
-    status_code = status.HTTP_403_FORBIDDEN
-    default_detail = 'Not allowed.'
+__all__ = ['BaseUser']

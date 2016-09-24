@@ -18,22 +18,19 @@
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #
 
-from simple_login.serializers.api import (
-    ActivationKeyRequestSerializer,
-    ActivationValidationSerializer,
-    LoginSerializer,
-    PasswordResetRequestSerializer,
-    PasswordChangeSerializer,
-    StatusSerializer,
-    RetrieveUpdateDestroyProfileValidationSerializer,
+from rest_framework.status import (
+    HTTP_304_NOT_MODIFIED,
+    HTTP_403_FORBIDDEN,
 )
 
-__all__ = [
-    'ActivationKeyRequestSerializer',
-    'ActivationValidationSerializer',
-    'LoginSerializer',
-    'PasswordResetRequestSerializer',
-    'PasswordChangeSerializer',
-    'StatusSerializer',
-    'RetrieveUpdateDestroyProfileValidationSerializer',
-]
+from simple_login.exceptions.base import BaseException
+
+
+class NotModified(BaseException):
+    status_code = HTTP_304_NOT_MODIFIED
+    default_detail = 'Nothing to change.'
+
+
+class Forbidden(BaseException):
+    status_code = HTTP_403_FORBIDDEN
+    default_detail = 'Not allowed.'
