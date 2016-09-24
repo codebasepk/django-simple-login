@@ -32,5 +32,5 @@ __all__ = [
     'send_password_reset_email',
     'generate_random_key',
     'UserHelpers',
-    'KEY_DEFAULT_VALUE'
+    'KEY_DEFAULT_VALUE',
 ]
