@@ -30,10 +30,8 @@ from simple_login.managers import SimpleUserManager
 
 class BaseUser(AbstractBaseUser, PermissionsMixin):
     email = models.EmailField(max_length=255, blank=False, unique=True)
-
     account_activation_key = models.IntegerField(default=KEY_DEFAULT_VALUE)
     password_reset_key = models.IntegerField(default=KEY_DEFAULT_VALUE)
-
     is_admin = models.BooleanField(default=False)
     is_active = models.BooleanField(default=False)
     date_joined = models.DateTimeField(auto_now_add=True, blank=False)
