@@ -24,8 +24,9 @@ from django.contrib.auth.models import (
 )
 from django.db import models
 
-from simple_login.utils import KEY_DEFAULT_VALUE
 from simple_login.managers import SimpleUserManager
+
+KEY_DEFAULT_VALUE = -1
 
 
 class BaseUser(AbstractBaseUser, PermissionsMixin):

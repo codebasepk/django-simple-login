@@ -55,7 +55,7 @@ MIDDLEWARE_CLASSES = [
 ]
 
 ROOT_URLCONF = 'django_simple_login.urls'
-AUTH_USER_MODEL = 'sample_app.UserProfile'
+AUTH_USER_MODEL = 'sample_app.User'
 
 TEMPLATES = [
     {

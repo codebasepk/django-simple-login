@@ -24,8 +24,9 @@ from simple_login.utils import (
     generate_random_key,
     send_password_reset_email,
     send_activation_email,
-    KEY_DEFAULT_VALUE,
 )
+
+KEY_DEFAULT_VALUE = -1
 
 
 class UserHelpers:
