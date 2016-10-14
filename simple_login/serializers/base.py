@@ -26,6 +26,8 @@ from rest_framework import (
 from simple_login.exceptions import NotModified, Forbidden
 from simple_login.models import BaseUser
 
+from simple_login import KEY_DEFAULT_VALUE
+
 
 class BaseSerializer(serializers.Serializer):
     email = None
@@ -65,3 +67,9 @@ class BaseSerializer(serializers.Serializer):
         user = self.user_model.objects.get(email=self.email)
         if not user.is_active:
             raise Forbidden('User not active.')
+
+    def raise_if_user_deactivated_by_admin(self):
+        user = self.user_model.objects.get(email=self.email)
+        if not user.is_active and \
+                user.account_activation_key == KEY_DEFAULT_VALUE:
+            raise Forbidden('User deactivated by admin.')

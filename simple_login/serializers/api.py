@@ -35,6 +35,7 @@ class ActivationKeyRequestSerializer(BaseSerializer):
         super().validate(attrs)
         self.raise_if_user_does_not_exist()
         self.raise_if_user_already_activated()
+        self.raise_if_user_deactivated_by_admin()
         return attrs
 
 
@@ -53,6 +54,7 @@ class ActivationValidationSerializer(BaseSerializer):
         self.activation_key = attrs.get('activation_key')
         self.raise_if_user_does_not_exist()
         self.raise_if_user_already_activated()
+        self.raise_if_user_deactivated_by_admin()
         self._raise_if_activation_key_invalid()
         return attrs
 
@@ -71,6 +73,7 @@ class LoginSerializer(BaseSerializer):
         self.password = attrs.get('password')
         self.raise_if_user_does_not_exist()
         self.raise_if_user_not_activated()
+        self.raise_if_user_deactivated_by_admin()
         self._raise_if_password_invalid()
         return attrs
 
