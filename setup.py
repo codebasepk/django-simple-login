@@ -33,7 +33,7 @@ os.chdir(os.path.normpath(os.path.join(os.path.abspath(__file__), os.pardir)))
 
 setup(
     name='django-simple-login',
-    version='0.4.0',
+    version='0.5.0',
     packages=find_packages(),
     include_package_data=True,
     license='GNU GPL Version 3',
@@ -41,7 +41,7 @@ setup(
     long_description=README,
     url='https://github.com/byteshaft/django-simple-login',
     download_url='https://github.com/byteShaft/django-simple-login/tarball/'
-                 '0.4.0',
+                 '0.5.0',
     author='Omer Akram',
     author_email='om26er@gmail.com',
     keywords=['django', 'accounts'],
