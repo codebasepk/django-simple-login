@@ -84,6 +84,7 @@ class PasswordResetRequestSerializer(BaseSerializer):
     def validate(self, attrs):
         super().validate(attrs)
         self.raise_if_user_does_not_exist()
+        self.raise_if_user_deactivated_by_admin()
         return attrs
 
 
@@ -102,6 +103,7 @@ class PasswordChangeSerializer(BaseSerializer):
         super().validate(attrs)
         self.password_reset_key = attrs.get('password_reset_key')
         self.raise_if_user_does_not_exist()
+        self.raise_if_user_deactivated_by_admin()
         self._raise_if_password_reset_key_invalid()
         return attrs
 
@@ -113,6 +115,7 @@ class StatusSerializer(BaseSerializer):
         super().validate(attrs)
         self.raise_if_user_does_not_exist()
         self.raise_if_user_not_activated()
+        self.raise_if_user_deactivated_by_admin()
         return attrs
 
 
@@ -123,4 +126,5 @@ class RetrieveUpdateDestroyProfileValidationSerializer(BaseSerializer):
         super().validate(attrs)
         if self.email:
             raise Forbidden('Not allowed to change email.')
+        self.raise_if_user_deactivated_by_admin()
         return attrs
