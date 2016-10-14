@@ -32,7 +32,7 @@ class BaseSerializer(serializers.Serializer):
 
     def __init__(self, user_model, **kwargs):
         super().__init__(**kwargs)
-        if not issubclass(self.user_model, BaseUser):
+        if not issubclass(user_model, BaseUser):
             raise serializers.ValidationError(
                 'user_model must be a subclass of simple_login.models.BaseUser'
             )
