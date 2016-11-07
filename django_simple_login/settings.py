@@ -21,7 +21,6 @@
 import os
 
 from django_simple_login.helpers import ConfigHelpers
-from sample_app.otp import request_sms_otp
 
 BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 CONFIG_FILE = os.path.expanduser('~/sample_django_config.ini')
@@ -57,8 +56,6 @@ MIDDLEWARE_CLASSES = [
 
 ROOT_URLCONF = 'django_simple_login.urls'
 AUTH_USER_MODEL = 'sample_app.User'
-ACCOUNT_ACTIVATION_SMS_OTP_CALLABLE = request_sms_otp
-ACCOUNT_MOBILE_NUMBER_FIELD = 'phone_number'
 
 TEMPLATES = [
     {
