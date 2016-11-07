@@ -35,6 +35,7 @@ from simple_login.views.base import (
     ProfileBaseAPIView,
     AuthenticatedRequestBaseAPIView,
 )
+from simple_login.utils.otp import OTPHandler
 
 
 class ActivationAPIView(ProfileBaseAPIView):
@@ -54,7 +55,8 @@ class ActivationKeyRequestAPIView(BaseAPIView):
 
     def post(self, *args, **kwargs):
         super().post(*args, **kwargs)
-        self.user_account.generate_and_send_account_activation_email_otp()
+        otp_handler = OTPHandler(self.get_user())
+        otp_handler.generate_and_send_account_activation_otps()
         return Response(status=status.HTTP_200_OK)
 
 
