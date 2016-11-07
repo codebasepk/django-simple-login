@@ -41,21 +41,30 @@ class ActivationKeyRequestSerializer(BaseSerializer):
 
 class ActivationValidationSerializer(BaseSerializer):
     email = serializers.EmailField(label='Email')
-    activation_key = serializers.IntegerField(label='Activation key')
+    email_otp = serializers.IntegerField(label='Email OTP')
+    sms_otp = serializers.IntegerField(label='SMS OTP')
 
-    def _raise_if_activation_key_invalid(self):
+    def _raise_if_email_otp_invalid(self):
         user = self.user_model.objects.get(email=self.email)
-        key = user.account_activation_key
-        if key == KEY_DEFAULT_VALUE or key != int(self.activation_key):
-            raise serializers.ValidationError('Invalid activation key.')
+        otp = user.account_activation_email_otp
+        if otp == KEY_DEFAULT_VALUE or otp != int(self.email_otp):
+            raise serializers.ValidationError('Invalid email OTP.')
+
+    def _raise_if_sms_otp_invalid(self):
+        user = self.user_model.objects.get(email=self.email)
+        otp = user.account_activation_sms_otp
+        if otp == KEY_DEFAULT_VALUE or otp != int(self.sms_otp):
+            raise serializers.ValidationError('Invalid sms OTP.')
 
     def validate(self, attrs):
         super().validate(attrs)
-        self.activation_key = attrs.get('activation_key')
+        self.email_otp = attrs.get('email_otp')
+        self.sms_otp = attrs.get('sms_otp')
         self.raise_if_user_does_not_exist()
         self.raise_if_user_already_activated()
         self.raise_if_user_deactivated_by_admin()
-        self._raise_if_activation_key_invalid()
+        self._raise_if_email_otp_invalid()
+        self._raise_if_sms_otp_invalid()
         return attrs
 
 
@@ -90,21 +99,21 @@ class PasswordResetRequestSerializer(BaseSerializer):
 
 class PasswordChangeSerializer(BaseSerializer):
     email = serializers.EmailField(label='Email')
-    password_reset_key = serializers.IntegerField(label='Password reset key')
+    email_otp = serializers.IntegerField(label='Password reset email OTP')
     new_password = serializers.CharField(label='New password')
 
-    def _raise_if_password_reset_key_invalid(self):
+    def _raise_if_password_reset_email_otp_invalid(self):
         user = self.user_model.objects.get(email=self.email)
-        key = user.password_reset_key
-        if key == KEY_DEFAULT_VALUE or key != int(self.password_reset_key):
-            raise serializers.ValidationError('Invalid password reset key.')
+        key = user.password_reset_email_otp
+        if key == KEY_DEFAULT_VALUE or key != int(self.email_otp):
+            raise serializers.ValidationError('Invalid email OTP')
 
     def validate(self, attrs):
         super().validate(attrs)
-        self.password_reset_key = attrs.get('password_reset_key')
+        self.email_otp = attrs.get('email_otp')
         self.raise_if_user_does_not_exist()
         self.raise_if_user_deactivated_by_admin()
-        self._raise_if_password_reset_key_invalid()
+        self._raise_if_password_reset_email_otp_invalid()
         return attrs
 
 

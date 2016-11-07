@@ -18,23 +18,19 @@
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #
 
-from rest_framework.authtoken.models import Token
-
-from simple_login.utils import generate_random_key, send_activation_email
+from simple_login import utils
 
 
 def process_save(sender, instance=None, created=False, **kwargs):
     if created:
-        Token.objects.create(user=instance)
-        if instance.is_admin:
-            if not instance.is_active:
-                instance.is_active = True
+        user = utils.UserHelpers(instance)
+        user.generate_auth_token()
+        if user.is_admin():
+            if not user.is_active():
+                user.set_active(True, commit=False)
         else:
-            instance.set_password(instance.password)
-            if not instance.is_active:
-                instance.account_activation_key = generate_random_key()
-                send_activation_email(
-                    instance.email,
-                    instance.account_activation_key
-                )
-        instance.save()
+            user.hash_password(commit=False)
+            if not user.is_active():
+                otp_handler = utils.OTPHandler(instance)
+                otp_handler.generate_and_send_account_activation_otps()
+        user.commit_changes()

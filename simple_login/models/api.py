@@ -33,11 +33,23 @@ from simple_login.models.utils import process_save
 
 class BaseUser(AbstractBaseUser, PermissionsMixin):
     email = models.EmailField(max_length=255, blank=False, unique=True)
-    account_activation_key = models.IntegerField(default=KEY_DEFAULT_VALUE)
-    password_reset_key = models.IntegerField(default=KEY_DEFAULT_VALUE)
     is_admin = models.BooleanField(default=False)
     is_active = models.BooleanField(default=False)
     date_joined = models.DateTimeField(auto_now_add=True, blank=False)
+
+    # OTP records.
+    account_activation_email_otp = models.IntegerField(
+        default=KEY_DEFAULT_VALUE
+    )
+    account_activation_sms_otp = models.IntegerField(
+        default=KEY_DEFAULT_VALUE
+    )
+    password_reset_email_otp = models.IntegerField(
+        default=KEY_DEFAULT_VALUE
+    )
+    password_reset_sms_otp = models.IntegerField(
+        default=KEY_DEFAULT_VALUE
+    )
 
     objects = SimpleUserManager()
 
