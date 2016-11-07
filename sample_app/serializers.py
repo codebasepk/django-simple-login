@@ -31,6 +31,7 @@ class UserSerializer(serializers.ModelSerializer):
     )
     password = serializers.CharField(write_only=True)
     full_name = serializers.CharField(required=True)
+    phone_number = serializers.CharField(required=True)
 
     class Meta:
         model = User
@@ -39,4 +40,5 @@ class UserSerializer(serializers.ModelSerializer):
             'email',
             'password',
             'full_name',
+            'phone_number',
         )

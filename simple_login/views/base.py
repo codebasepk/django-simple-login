@@ -50,8 +50,7 @@ class BaseAPIView(APIView):
     def user_account(self):
         """Return account helpers object by reading email from serializer
         data."""
-        email = self.serializer.data.get('email')
-        return UserHelpers(self.user_model, email)
+        return UserHelpers(self.user_model, self.serializer.data.get('email'))
 
     def get_user(self):
         if not self.request.user.is_anonymous():

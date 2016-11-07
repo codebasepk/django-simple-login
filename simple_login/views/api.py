@@ -54,7 +54,7 @@ class ActivationKeyRequestAPIView(BaseAPIView):
 
     def post(self, *args, **kwargs):
         super().post(*args, **kwargs)
-        self.user_account.generate_and_send_account_activation_key()
+        self.user_account.generate_and_send_account_activation_email_otp()
         return Response(status=status.HTTP_200_OK)
 
 
@@ -74,7 +74,7 @@ class PasswordResetRequestAPIView(BaseAPIView):
 
     def post(self, *args, **kwargs):
         super().post(*args, **kwargs)
-        self.user_account.generate_and_send_password_reset_key()
+        self.user_account.generate_and_send_password_reset_email_otp()
         return Response(status=status.HTTP_200_OK)
 
 
