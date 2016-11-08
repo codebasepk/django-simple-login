@@ -21,6 +21,8 @@
 from rest_framework import permissions
 from rest_framework.views import APIView
 
+from simple_login import KEY_DEFAULT_VALUE
+from simple_login.exceptions import Forbidden
 from simple_login.utils import UserHelpers
 
 
@@ -100,6 +102,14 @@ class ProfileBaseAPIView(BaseAPIView):
 
 class AuthenticatedRequestBaseAPIView(BaseAPIView):
     permission_classes = (permissions.IsAuthenticated, )
+
+    def check_permissions(self, request):
+        u = self.get_auth_user()
+        if u:
+            if not u.is_active and u.account_activation_email_otp == \
+                    KEY_DEFAULT_VALUE:
+                raise Forbidden('User deactivated by admin.')
+        super().check_permissions(request)
 
     def ensure_password_hashed(self):
         password = self.request.data.get('password')

@@ -135,5 +135,4 @@ class RetrieveUpdateDestroyProfileValidationSerializer(BaseSerializer):
         super().validate(attrs)
         if self.email:
             raise Forbidden('Not allowed to change email.')
-        self.raise_if_user_deactivated_by_admin()
         return attrs
