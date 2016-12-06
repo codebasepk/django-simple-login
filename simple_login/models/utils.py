@@ -18,12 +18,12 @@
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #
 
-from simple_login import utils
+from simple_login.utils import UserHelpers, OTPHandler
 
 
 def process_save(sender, instance=None, created=False, **kwargs):
     if created:
-        user = utils.UserHelpers(instance)
+        user = UserHelpers(instance)
         user.generate_auth_token()
         if user.is_admin():
             if not user.is_active():
@@ -31,6 +31,6 @@ def process_save(sender, instance=None, created=False, **kwargs):
         else:
             user.hash_password(commit=False)
             if not user.is_active():
-                otp_handler = utils.OTPHandler(instance)
+                otp_handler = OTPHandler(instance)
                 otp_handler.generate_and_send_account_activation_otps()
         user.commit_changes()

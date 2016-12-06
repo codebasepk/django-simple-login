@@ -28,7 +28,7 @@ from sample_app.views import (
     Login,
     Activate,
     Profile,
-    StatusAPIView
+    Status
 )
 
 
@@ -39,6 +39,6 @@ urlpatterns = [
     url(r'^api/user/login$', Login.as_view()),
     url(r'^api/user/forgot-password$', ForgotPassword.as_view()),
     url(r'^api/user/change-password$', ChangePassword.as_view()),
-    url(r'^api/user/status$', StatusAPIView.as_view()),
+    url(r'^api/user/status$', Status.as_view()),
     url(r'^api/me$', Profile.as_view()),
 ]

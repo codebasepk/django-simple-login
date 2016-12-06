@@ -18,6 +18,7 @@
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #
 
+from django.conf import settings
 from rest_framework import (
     exceptions as drf_exceptions,
     serializers
@@ -26,6 +27,14 @@ from rest_framework import (
 from simple_login import KEY_DEFAULT_VALUE
 from simple_login.serializers.base import BaseSerializer
 from simple_login.exceptions import Forbidden
+
+OTP_METHOD_EMAIL = 'email'
+OTP_METHOD_SMS = 'sms'
+
+try:
+    OTP_METHODS = [method.lower() for method in settings.OTP_METHODS]
+except AttributeError:
+    OTP_METHODS = [OTP_METHOD_EMAIL]
 
 
 class ActivationKeyRequestSerializer(BaseSerializer):
@@ -41,8 +50,10 @@ class ActivationKeyRequestSerializer(BaseSerializer):
 
 class ActivationValidationSerializer(BaseSerializer):
     email = serializers.EmailField(label='Email')
-    email_otp = serializers.IntegerField(label='Email OTP')
-    sms_otp = serializers.IntegerField(label='SMS OTP')
+    email_otp = serializers.IntegerField(
+        label='Email OTP', required=OTP_METHOD_EMAIL in OTP_METHODS)
+    sms_otp = serializers.IntegerField(
+        label='SMS OTP', required=OTP_METHOD_SMS in OTP_METHODS)
 
     def _raise_if_email_otp_invalid(self):
         user = self.user_model.objects.get(email=self.email)
@@ -63,8 +74,10 @@ class ActivationValidationSerializer(BaseSerializer):
         self.raise_if_user_does_not_exist()
         self.raise_if_user_already_activated()
         self.raise_if_user_deactivated_by_admin()
-        self._raise_if_email_otp_invalid()
-        self._raise_if_sms_otp_invalid()
+        if OTP_METHOD_EMAIL in OTP_METHODS:
+            self._raise_if_email_otp_invalid()
+        if OTP_METHOD_SMS in OTP_METHODS:
+            self._raise_if_sms_otp_invalid()
         return attrs
 
 
