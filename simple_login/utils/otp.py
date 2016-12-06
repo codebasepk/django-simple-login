@@ -20,17 +20,11 @@
 
 from django.conf import settings
 
-from simple_login.models import BaseUser
-from simple_login.utils import send_activation_email
+from simple_login.utils import send_activation_email, generate_random_key
 
 
 class OTPHandler:
     def __init__(self, user_model_instance):
-        if not isinstance(user_model_instance, BaseUser):
-            raise ValueError(
-                'Parameter `user_model_instance` must be an instance of '
-                'simple_login.models.BaseUser'
-            )
         self.instance = user_model_instance
 
     def _hasattr(self, attr):
@@ -72,7 +66,6 @@ class OTPHandler:
         try:
             return settings.ACCOUNT_ACTIVATION_EMAIL_OTP_CALLABLE
         except AttributeError:
-            from simple_login.utils import generate_random_key
             return generate_random_key
 
     @staticmethod

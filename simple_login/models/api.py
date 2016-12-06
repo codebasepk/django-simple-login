@@ -77,4 +77,5 @@ class BaseUser(AbstractBaseUser, PermissionsMixin):
     class Meta:
         abstract = True
 
+
 post_save.connect(process_save, sender=settings.AUTH_USER_MODEL)
