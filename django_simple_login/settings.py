@@ -81,6 +81,8 @@ REST_FRAMEWORK = {
 
 WSGI_APPLICATION = 'django_simple_login.wsgi.application'
 APP_NAME = 'Simple Login'
+# Supported methods email and sms
+OTP_METHODS = ['EMAIL']
 
 DATABASES = {
     'default': {

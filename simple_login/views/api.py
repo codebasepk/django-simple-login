@@ -56,7 +56,7 @@ class ActivationKeyRequestAPIView(BaseAPIView):
     def post(self, *args, **kwargs):
         super().post(*args, **kwargs)
         otp_handler = OTPHandler(self.get_user())
-        otp_handler.generate_and_send_account_activation_otps()
+        otp_handler.generate_and_send_account_activation_otps(commit=True)
         return Response(status=status.HTTP_200_OK)
 
 
