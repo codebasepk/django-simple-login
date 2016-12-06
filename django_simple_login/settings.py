@@ -23,7 +23,7 @@ import os
 from django_simple_login.helpers import ConfigHelpers
 
 BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
-CONFIG_FILE = os.path.expanduser('~/sample_django_config.ini')
+CONFIG_FILE = os.path.expanduser('~/sample_config.ini')
 config_helpers = ConfigHelpers(CONFIG_FILE)
 SECRET_KEY = '*e-fod9wl!k0x=9%@*=6sf(=@i99x_o#lw)z$+80!ineak18xp'
 DEBUG = config_helpers.get_debug_setting()
