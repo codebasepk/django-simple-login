@@ -18,11 +18,10 @@
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #
 
-from simple_login import utils
-
 
 def process_save(sender, instance=None, created=False, **kwargs):
     if created:
+        from simple_login import utils
         user = utils.UserHelpers(instance)
         user.generate_auth_token()
         if user.is_admin():
