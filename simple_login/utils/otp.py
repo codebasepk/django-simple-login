@@ -36,18 +36,12 @@ class OTPHandler:
     def _setattr(self, key, value):
         setattr(self.instance, key, value)
 
-    def _split_country_code_and_number(self):
-        num = self._getattr(settings.ACCOUNT_MOBILE_NUMBER_FIELD)
-        country_code, mobile_number = tuple(num.split('-'))
-        if country_code.startswith('+'):
-            country_code = country_code.replace('+', '')
-        return country_code, mobile_number
-
     def generate_and_send_account_activation_otps(self, commit=False):
         if self._hasattr('account_activation_sms_otp'):
             self._setattr(
                 'account_activation_sms_otp',
-                self.generate_sms_otp(*self._split_country_code_and_number())
+                self.generate_sms_otp(
+                    self._getattr(settings.ACCOUNT_MOBILE_NUMBER_FIELD))
             )
         if self._hasattr('account_activation_email_otp'):
             self._setattr(
@@ -80,5 +74,5 @@ class OTPHandler:
             return None
 
     @staticmethod
-    def generate_sms_otp(country_code, mobile_number):
-        return OTPHandler._get_sms_otp_generator()(country_code, mobile_number)
+    def generate_sms_otp(mobile_number):
+        return OTPHandler._get_sms_otp_generator()(mobile_number)
