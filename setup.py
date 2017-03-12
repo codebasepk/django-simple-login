@@ -21,7 +21,7 @@ setup(
     description='A simple django app to make accounts creation a breeze.',
     long_description=README,
     download_url='https://github.com/byteShaft/django-simple-login/tarball/'
-                 '0.6.1',
+                 '0.6.2',
     keywords=['django', 'accounts'],
     classifiers=[],
     install_requires=['django', 'djangorestframework'],
