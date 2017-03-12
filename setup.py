@@ -9,7 +9,7 @@ os.chdir(os.path.normpath(os.path.join(os.path.abspath(__file__), os.pardir)))
 
 setup(
     name='django-simple-login',
-    version='0.6.1',
+    version='0.6.2',
     packages=['simple_login', 'simple_login.apps',
               'simple_login.utils', 'simple_login.views',
               'simple_login.models', 'simple_login.managers',
