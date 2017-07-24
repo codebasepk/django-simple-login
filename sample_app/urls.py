@@ -19,6 +19,8 @@
 #
 
 from django.conf.urls import url
+from django.conf import settings
+from django.conf.urls.static import static
 
 from sample_app import views
 
@@ -32,4 +34,4 @@ urlpatterns = [
     url(r'^api/change-password$', views.ChangePassword.as_view()),
     url(r'^api/status$', views.Status.as_view()),
     url(r'^api/me$', views.Profile.as_view()),
-]
+] + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)

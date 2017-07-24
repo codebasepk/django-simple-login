@@ -123,6 +123,9 @@ USE_TZ = True
 STATIC_ROOT = os.path.join(BASE_DIR, "static/")
 STATIC_URL = '/static/'
 
+MEDIA_ROOT = os.path.join(BASE_DIR, "media")
+MEDIA_URL = '/media/'
+
 EMAIL_USE_TLS = True
 EMAIL_HOST = config_helpers.get_email_credential_by_key('host')
 EMAIL_HOST_USER = config_helpers.get_email_credential_by_key('email')
