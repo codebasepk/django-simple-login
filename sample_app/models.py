@@ -20,10 +20,10 @@
 
 from django.db import models
 
-from simple_login import models
+from simple_login import models as dsl_models
 
 
-class User(models.BaseUser):
+class User(dsl_models.BaseUser):
     full_name = models.CharField(max_length=255, blank=False)
     phone_number = models.CharField(max_length=255, blank=False)
     account_activation_sms_otp = None
