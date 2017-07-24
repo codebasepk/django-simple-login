@@ -19,7 +19,6 @@
 #
 
 from rest_framework import serializers
-from rest_framework.validators import UniqueValidator
 
 from sample_app.models import User
 
