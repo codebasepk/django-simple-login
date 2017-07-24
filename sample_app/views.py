@@ -25,36 +25,36 @@ from sample_app import models
 from sample_app import serializers
 
 
-class Register(generics.CreateAPIView):
+class RegisterAPIView(generics.CreateAPIView):
     serializer_class = serializers.UserSerializer
 
 
-class Activate(views.ActivationAPIView):
-    user_model = models.User
-    serializer_class = serializers.UserSerializer
-
-
-class ActivationKeyRequest(views.ActivationKeyRequestAPIView):
-    user_model = models.User
-
-
-class Login(views.LoginAPIView):
+class ActivateAPIView(views.ActivationAPIView):
     user_model = models.User
     serializer_class = serializers.UserSerializer
 
 
-class Profile(views.RetrieveUpdateDestroyProfileAPIView):
+class ActivationKeyRequestAPIView(views.ActivationKeyRequestAPIView):
+    user_model = models.User
+
+
+class LoginAPIView(views.LoginAPIView):
     user_model = models.User
     serializer_class = serializers.UserSerializer
 
 
-class ForgotPassword(views.PasswordResetRequestAPIView):
+class ProfileAPIView(views.RetrieveUpdateDestroyProfileAPIView):
+    user_model = models.User
+    serializer_class = serializers.UserSerializer
+
+
+class ForgotPasswordAPIView(views.PasswordResetRequestAPIView):
     user_model = models.User
 
 
-class ChangePassword(views.PasswordChangeAPIView):
+class ChangePasswordAPIView(views.PasswordChangeAPIView):
     user_model = models.User
 
 
-class Status(views.StatusAPIView):
+class StatusAPIView(views.StatusAPIView):
     user_model = models.User

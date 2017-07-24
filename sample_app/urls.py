@@ -26,12 +26,12 @@ from sample_app import views
 
 
 urlpatterns = [
-    url(r'^api/register$', views.Register.as_view()),
-    url(r'^api/request-activation-key$', views.ActivationKeyRequest.as_view()),
-    url(r'^api/activate$', views.Activate.as_view()),
-    url(r'^api/login$', views.Login.as_view()),
-    url(r'^api/forgot-password$', views.ForgotPassword.as_view()),
-    url(r'^api/change-password$', views.ChangePassword.as_view()),
-    url(r'^api/status$', views.Status.as_view()),
-    url(r'^api/me$', views.Profile.as_view()),
+    url(r'^api/register$', views.RegisterAPIView.as_view()),
+    url(r'^api/request-activation-key$', views.ActivationKeyRequestAPIView.as_view()),
+    url(r'^api/activate$', views.ActivateAPIView.as_view()),
+    url(r'^api/login$', views.LoginAPIView.as_view()),
+    url(r'^api/forgot-password$', views.ForgotPasswordAPIView.as_view()),
+    url(r'^api/change-password$', views.ChangePasswordAPIView.as_view()),
+    url(r'^api/status$', views.StatusAPIView.as_view()),
+    url(r'^api/me$', views.ProfileAPIView.as_view()),
 ] + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
