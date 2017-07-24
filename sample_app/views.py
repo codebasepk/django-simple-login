@@ -18,56 +18,43 @@
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #
 
-from rest_framework.generics import CreateAPIView
+from rest_framework import generics
 
-from simple_login.views import (
-    ActivationKeyRequestAPIView,
-    RetrieveUpdateDestroyProfileAPIView,
-    ActivationAPIView,
-    LoginAPIView,
-    PasswordResetRequestAPIView,
-    PasswordChangeAPIView,
-    StatusAPIView,
-)
-
-from sample_app.models import User
-from sample_app.serializers import UserSerializer
+from simple_login import views
+from sample_app import models
+from sample_app import serializers
 
 
-class Register(CreateAPIView):
-    serializer_class = UserSerializer
+class Register(generics.CreateAPIView):
+    serializer_class = serializers.UserSerializer
 
 
-class Activate(ActivationAPIView):
-    user_model = User
-    serializer_class = UserSerializer
+class Activate(views.ActivationAPIView):
+    user_model = models.User
+    serializer_class = serializers.UserSerializer
 
 
-class ActivationKeyRequest(ActivationKeyRequestAPIView):
-    user_model = User
-    serializer_class = UserSerializer
+class ActivationKeyRequest(views.ActivationKeyRequestAPIView):
+    user_model = models.User
 
 
-class Login(LoginAPIView):
-    user_model = User
-    serializer_class = UserSerializer
+class Login(views.LoginAPIView):
+    user_model = models.User
+    serializer_class = serializers.UserSerializer
 
 
-class Profile(RetrieveUpdateDestroyProfileAPIView):
-    user_model = User
-    serializer_class = UserSerializer
+class Profile(views.RetrieveUpdateDestroyProfileAPIView):
+    user_model = models.User
+    serializer_class = serializers.UserSerializer
 
 
-class ForgotPassword(PasswordResetRequestAPIView):
-    user_model = User
-    serializer_class = UserSerializer
+class ForgotPassword(views.PasswordResetRequestAPIView):
+    user_model = models.User
 
 
-class ChangePassword(PasswordChangeAPIView):
-    user_model = User
-    serializer_class = UserSerializer
+class ChangePassword(views.PasswordChangeAPIView):
+    user_model = models.User
 
 
-class Status(StatusAPIView):
-    user_model = User
-    serializer_class = UserSerializer
+class Status(views.StatusAPIView):
+    user_model = models.User

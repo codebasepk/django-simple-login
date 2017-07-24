@@ -20,25 +20,16 @@
 
 from django.conf.urls import url
 
-from sample_app.views import (
-    ActivationKeyRequest,
-    ForgotPassword,
-    ChangePassword,
-    Register,
-    Login,
-    Activate,
-    Profile,
-    Status
-)
+from sample_app import views
 
 
 urlpatterns = [
-    url(r'^api/user/register$', Register.as_view()),
-    url(r'^api/user/request-activation-key$', ActivationKeyRequest.as_view()),
-    url(r'^api/user/activate$', Activate.as_view()),
-    url(r'^api/user/login$', Login.as_view()),
-    url(r'^api/user/forgot-password$', ForgotPassword.as_view()),
-    url(r'^api/user/change-password$', ChangePassword.as_view()),
-    url(r'^api/user/status$', Status.as_view()),
-    url(r'^api/me$', Profile.as_view()),
+    url(r'^api/register$', views.Register.as_view()),
+    url(r'^api/request-activation-key$', views.ActivationKeyRequest.as_view()),
+    url(r'^api/activate$', views.Activate.as_view()),
+    url(r'^api/login$', views.Login.as_view()),
+    url(r'^api/forgot-password$', views.ForgotPassword.as_view()),
+    url(r'^api/change-password$', views.ChangePassword.as_view()),
+    url(r'^api/status$', views.Status.as_view()),
+    url(r'^api/me$', views.Profile.as_view()),
 ]
