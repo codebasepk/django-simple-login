@@ -44,10 +44,7 @@ class ActivationAPIView(ProfileBaseAPIView):
     def post(self, *args, **kwargs):
         super().post(*args, **kwargs)
         self.user_account.activate()
-        return Response(
-            data=self.get_user_profile_data_with_token(),
-            status=status.HTTP_200_OK
-        )
+        return Response(data=self.get_user_profile_data_with_token(), status=status.HTTP_200_OK)
 
 
 class ActivationKeyRequestAPIView(BaseAPIView):
@@ -65,10 +62,7 @@ class LoginAPIView(ProfileBaseAPIView):
 
     def post(self, *args, **kwargs):
         super().post(*args, **kwargs)
-        return Response(
-            data=self.get_user_profile_data_with_token(),
-            status=status.HTTP_200_OK
-        )
+        return Response(data=self.get_user_profile_data_with_token(), status=status.HTTP_200_OK)
 
 
 class PasswordResetRequestAPIView(BaseAPIView):
@@ -85,9 +79,7 @@ class PasswordChangeAPIView(BaseAPIView):
 
     def post(self, *args, **kwargs):
         super().post(*args, **kwargs)
-        self.user_account.change_password(
-            self.serializer.data.get('new_password')
-        )
+        self.user_account.change_password(self.serializer.data.get('new_password'))
         return Response(status=status.HTTP_200_OK)
 
 

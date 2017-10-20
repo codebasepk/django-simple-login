@@ -18,19 +18,14 @@
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #
 
-from rest_framework.status import (
-    HTTP_304_NOT_MODIFIED,
-    HTTP_403_FORBIDDEN,
-)
-
-from simple_login.exceptions.base import BaseException
+from rest_framework import exceptions, status
 
 
-class NotModified(BaseException):
-    status_code = HTTP_304_NOT_MODIFIED
+class NotModified(exceptions.APIException):
+    status_code = status.HTTP_304_NOT_MODIFIED
     default_detail = 'Nothing to change.'
 
 
-class Forbidden(BaseException):
-    status_code = HTTP_403_FORBIDDEN
+class Forbidden(exceptions.APIException):
+    status_code = status.HTTP_403_FORBIDDEN
     default_detail = 'Not allowed.'
