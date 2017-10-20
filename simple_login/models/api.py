@@ -19,10 +19,7 @@
 #
 
 from django.conf import settings
-from django.contrib.auth.models import (
-    AbstractBaseUser,
-    PermissionsMixin,
-)
+from django.contrib.auth.models import AbstractBaseUser, PermissionsMixin
 from django.db import models
 from django.db.models.signals import post_save
 
@@ -32,37 +29,31 @@ from simple_login.models.utils import process_save
 
 
 class BaseUser(AbstractBaseUser, PermissionsMixin):
-    email = models.EmailField(max_length=255, blank=False, unique=True)
+    username = models.CharField(max_length=255, blank=True, unique=True)
+    email = models.EmailField(max_length=255, blank=True, unique=True)
+
     is_admin = models.BooleanField(default=False)
     is_active = models.BooleanField(default=False)
     date_joined = models.DateTimeField(auto_now_add=True, blank=False)
 
     # OTP records.
-    account_activation_email_otp = models.IntegerField(
-        default=KEY_DEFAULT_VALUE
-    )
-    account_activation_sms_otp = models.IntegerField(
-        default=KEY_DEFAULT_VALUE
-    )
-    password_reset_email_otp = models.IntegerField(
-        default=KEY_DEFAULT_VALUE
-    )
-    password_reset_sms_otp = models.IntegerField(
-        default=KEY_DEFAULT_VALUE
-    )
+    account_activation_email_otp = models.IntegerField(default=KEY_DEFAULT_VALUE)
+    account_activation_sms_otp = models.IntegerField(default=KEY_DEFAULT_VALUE)
+    password_reset_email_otp = models.IntegerField(default=KEY_DEFAULT_VALUE)
+    password_reset_sms_otp = models.IntegerField(default=KEY_DEFAULT_VALUE)
 
     objects = SimpleUserManager()
 
-    USERNAME_FIELD = 'email'
+    USERNAME_FIELD = 'username'
 
     def get_full_name(self):
-        return self.email
+        return self.username if self.username else self.email
 
     def get_short_name(self):
-        return self.email
+        return self.username if self.username else self.email
 
     def __str__(self):
-        return self.email
+        return self.username if self.username else self.email
 
     def has_perm(self, perm, obj=None):
         return True
