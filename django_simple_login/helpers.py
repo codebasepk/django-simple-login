@@ -25,6 +25,7 @@ CONFIG_FILE_PATH = os.path.expanduser('~/sample_config.ini')
 CONFIG_SECTION_DEFAULT = 'defaults'
 CONFIG_SECTION_EMAIL_CREDENTIALS = 'email_credentials'
 CONFIG_SECTION_DATABASE_CREDENTIALS = 'database_credentials'
+CONFIG_SECTION_TWITTER_CREDENTIALS = 'twitter'
 
 
 class ConfigHelpers:
@@ -45,3 +46,6 @@ class ConfigHelpers:
 
     def get_debug_setting(self):
         return self.read_config_parameter(CONFIG_SECTION_DEFAULT, 'debug') == 'True'
+
+    def get_twitter_cred_by_key(self, key):
+        return self.read_config_parameter(CONFIG_SECTION_TWITTER_CREDENTIALS, key)

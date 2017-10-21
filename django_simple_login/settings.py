@@ -137,6 +137,6 @@ DEFAULT_FROM_EMAIL = EMAIL_HOST_USER
 
 ACCOUNT_AUTH_METHOD = 'username'
 
-TWITTER_CONSUMER_KEY = ''
-TWITTER_CONSUMER_SECRET = ''
+TWITTER_CONSUMER_KEY = config_helpers.get_twitter_cred_by_key('CONSUMER_KEY')
+TWITTER_CONSUMER_SECRET = config_helpers.get_twitter_cred_by_key('CONSUMER_SECRET')
 AUTH_USER_SERIALIZER = 'sample_app.serializers.UserSerializer'
