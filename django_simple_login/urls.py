@@ -22,8 +22,11 @@ from django.conf.urls import include, url
 from django.contrib import admin
 
 from sample_app import urls as exp_urls
+from simple_login.views import TwitterLoginAPIView, FacebookLoginAPIView
 
 urlpatterns = [
     url(r'^admin/', admin.site.urls),
     url(r'^', include(exp_urls)),
+    url(r'^api/twitter/', TwitterLoginAPIView.as_view()),
+    url(r'^api/facebook/', FacebookLoginAPIView.as_view())
 ]

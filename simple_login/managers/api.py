@@ -24,9 +24,10 @@ from django.contrib.auth.models import BaseUserManager
 class SimpleUserManager(BaseUserManager):
 
     def create_user(self, **kwargs):
-        password = kwargs.pop('password')
+        password = kwargs.pop('password', None)
         user = self.model(**kwargs)
-        user.set_password(password)
+        if password:
+            user.set_password(password)
         user.save(using=self._db)
         return user
 

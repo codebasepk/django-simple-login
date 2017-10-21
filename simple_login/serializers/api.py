@@ -19,6 +19,7 @@
 #
 
 from django.conf import settings
+from django.contrib.auth import get_user_model
 from rest_framework import (
     exceptions as drf_exceptions,
     serializers
@@ -36,6 +37,14 @@ try:
     OTP_METHODS = [method.lower() for method in settings.OTP_METHODS]
 except AttributeError:
     OTP_METHODS = [OTP_METHOD_EMAIL]
+
+
+class AuthUserSerializer(serializers.ModelSerializer):
+    password = serializers.CharField(write_only=True)
+
+    class Meta:
+        model = get_user_model()
+        fields = ('id', 'username', 'email', 'password')
 
 
 class ActivationKeyRequestSerializer(BaseSerializer):
@@ -140,3 +149,12 @@ class RetrieveUpdateDestroyProfileValidationSerializer(BaseSerializer):
         if self.email:
             raise Forbidden('Not allowed to change email.')
         return attrs
+
+
+class TwitterLoginSerializer(serializers.Serializer):
+    access_token = serializers.CharField(required=True)
+    access_token_secret = serializers.CharField(required=True)
+
+
+class FacebookLoginSerializer(serializers.Serializer):
+    access_token = serializers.CharField(required=True)

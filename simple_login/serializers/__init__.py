@@ -19,6 +19,7 @@
 #
 
 from simple_login.serializers.api import (
+    AuthUserSerializer,
     ActivationKeyRequestSerializer,
     ActivationValidationSerializer,
     LoginSerializer,
@@ -26,9 +27,12 @@ from simple_login.serializers.api import (
     PasswordChangeSerializer,
     StatusSerializer,
     RetrieveUpdateDestroyProfileValidationSerializer,
+    FacebookLoginSerializer,
+    TwitterLoginSerializer,
 )
 
 __all__ = [
+    'AuthUserSerializer',
     'ActivationKeyRequestSerializer',
     'ActivationValidationSerializer',
     'LoginSerializer',
@@ -36,4 +40,6 @@ __all__ = [
     'PasswordChangeSerializer',
     'StatusSerializer',
     'RetrieveUpdateDestroyProfileValidationSerializer',
+    'FacebookLoginSerializer',
+    'TwitterLoginSerializer',
 ]

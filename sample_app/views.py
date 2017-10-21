@@ -23,7 +23,7 @@ from sample_app import models
 from sample_app import serializers
 
 
-class RegisterAPIView(views.SignUpAPIView):
+class RegisterAPIView(views.RegisterAPIView):
     serializer_class = serializers.UserSerializer
 
 

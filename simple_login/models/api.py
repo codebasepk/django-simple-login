@@ -28,6 +28,16 @@ from simple_login.managers import SimpleUserManager
 from simple_login.models.utils import process_save
 
 
+class TwitterLink(models.Model):
+    user = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE, null=True)
+    unique_id = models.CharField(max_length=255, blank=False)
+
+
+class FacebookLink(models.Model):
+    user = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE, null=True)
+    unique_id = models.CharField(max_length=255, blank=False)
+
+
 class BaseUser(AbstractBaseUser, PermissionsMixin):
     username = models.CharField(max_length=255, blank=True, unique=True, null=True)
     email = models.EmailField(max_length=255, blank=True, unique=True, null=True)

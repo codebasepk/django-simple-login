@@ -24,5 +24,5 @@ setup(
                  '0.6.2',
     keywords=['django', 'accounts'],
     classifiers=[],
-    install_requires=['django', 'djangorestframework'],
+    install_requires=['django', 'djangorestframework', 'oauth2', 'requests'],
 )
