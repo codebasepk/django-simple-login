@@ -20,17 +20,16 @@
 
 from django.contrib.auth.models import BaseUserManager
 
-from simple_login.managers.utils import raise_if_email_or_password_missing
-
 
 class SimpleUserManager(BaseUserManager):
 
-    def create_user(self, email, password=None, **extra_fields):
-        raise_if_email_or_password_missing(email, password)
-        user = self.model(email=email, **extra_fields)
-        user.set_password(password)
+    def create_user(self, **kwargs):
+        password = kwargs.pop('password', None)
+        user = self.model(**kwargs)
+        if password:
+            user.set_password(password)
         user.save(using=self._db)
         return user
 
-    def create_superuser(self, email, password, **extra_fields):
-        return self.create_user(email, password, is_admin=True, **extra_fields)
+    def create_superuser(self, **kwargs):
+        return self.create_user(is_admin=True, **kwargs)

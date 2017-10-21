@@ -18,6 +18,6 @@
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #
 
-from simple_login.models.api import BaseUser
+from simple_login.models.api import BaseUser, TwitterLink, FacebookLink
 
-__all__ = ['BaseUser']
+__all__ = ['BaseUser', 'TwitterLink', 'FacebookLink']

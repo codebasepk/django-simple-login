@@ -22,6 +22,7 @@ from rest_framework import permissions
 from rest_framework.views import APIView
 
 from simple_login.utils import UserHelpers
+from simple_login.utils.auth import get_query
 
 
 class BaseAPIView(APIView):
@@ -50,7 +51,7 @@ class BaseAPIView(APIView):
     def user_account(self):
         """Return account helpers object by reading email from serializer
         data."""
-        return UserHelpers(self.user_model, self.serializer.data.get('email'))
+        return UserHelpers(self.user_model, **get_query(self.serializer.data))
 
     def get_user(self):
         if not self.request.user.is_anonymous():
@@ -82,10 +83,7 @@ class BaseAPIView(APIView):
             serializer_class = self.get_validation_class()
         else:
             serializer_class = self.get_serializer_class()
-        self.serializer = serializer_class(
-            user_model=self.user_model,
-            data=self.request.data
-        )
+        self.serializer = serializer_class(user_model=self.user_model, data=self.request.data)
         self.serializer.is_valid(raise_exception=raise_exception)
 
 

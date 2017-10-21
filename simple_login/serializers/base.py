@@ -18,22 +18,23 @@
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #
 
-from rest_framework import (
-    exceptions as drf_exceptions,
-    serializers
-)
+from rest_framework import exceptions, serializers
 
 from simple_login.exceptions import NotModified, Forbidden
+from simple_login.utils.auth import AuthMethod, get_query
 from simple_login.models import BaseUser
-
 from simple_login import KEY_DEFAULT_VALUE
 
 
 class BaseSerializer(serializers.Serializer):
-    email = None
+
+    email = serializers.EmailField(label='Email', required=AuthMethod.email_only())
+    username = serializers.CharField(label='Username', required=AuthMethod.username_only())
 
     def __init__(self, user_model, **kwargs):
         super().__init__(**kwargs)
+        self.email = None
+        self.attrs = None
         if not issubclass(user_model, BaseUser):
             raise serializers.ValidationError(
                 'user_model must be a subclass of simple_login.models.BaseUser'
@@ -48,29 +49,27 @@ class BaseSerializer(serializers.Serializer):
 
     def validate(self, attrs):
         """A common call that's part of every request."""
+        self.attrs = attrs
         self.email = attrs.get('email')
+        self.username = attrs.get('username')
 
     def raise_if_user_does_not_exist(self):
         try:
-            return self.user_model.objects.get(email=self.email)
+            return self.user_model.objects.get(**get_query(self.attrs))
         except self.user_model.DoesNotExist:
-            raise drf_exceptions.NotFound(
-                'User with email \'{}\' does not exist.'.format(self.email)
-            )
+            raise exceptions.NotFound('User with email \'{}\' does not exist.'.format(self.email))
 
     def raise_if_user_already_activated(self):
-        user = self.user_model.objects.get(email=self.email)
+        user = self.user_model.objects.get(**get_query(self.attrs))
         if user.is_active:
             raise NotModified('User already activated.')
 
     def raise_if_user_not_activated(self):
-        user = self.user_model.objects.get(email=self.email)
-        if not user.is_active and \
-                user.account_activation_email_otp != KEY_DEFAULT_VALUE:
+        user = self.user_model.objects.get(**get_query(self.attrs))
+        if not user.is_active and user.account_activation_email_otp != KEY_DEFAULT_VALUE:
             raise Forbidden('User not active.')
 
     def raise_if_user_deactivated_by_admin(self):
-        user = self.user_model.objects.get(email=self.email)
-        if not user.is_active and \
-                user.account_activation_email_otp == KEY_DEFAULT_VALUE:
+        user = self.user_model.objects.get(**get_query(self.attrs))
+        if not user.is_active and user.account_activation_email_otp == KEY_DEFAULT_VALUE:
             raise Forbidden('User deactivated by admin.')

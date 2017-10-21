@@ -18,14 +18,12 @@
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #
 
-from rest_framework import generics
-
 from simple_login import views
 from sample_app import models
 from sample_app import serializers
 
 
-class RegisterAPIView(generics.CreateAPIView):
+class RegisterAPIView(views.RegisterAPIView):
     serializer_class = serializers.UserSerializer
 
 

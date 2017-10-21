@@ -31,11 +31,9 @@ from simple_login.utils import (
 
 
 class UserHelpers:
-    def __init__(self, model_class_or_instance, email=None):
+    def __init__(self, model_class_or_instance, **kwargs):
         if inspect.isclass(model_class_or_instance):
-            if not email:
-                raise ValueError('Argument `email` is required')
-            self.user = model_class_or_instance.objects.get(email=email)
+            self.user = model_class_or_instance.objects.get(**kwargs)
         else:
             self.user = model_class_or_instance
 
@@ -73,6 +71,7 @@ class UserHelpers:
         Token.objects.create(user=self.user)
 
     def get_auth_token(self):
+        # print(self.user)
         return Token.objects.get(user=self.user).key
 
     def activate(self, commit=True):

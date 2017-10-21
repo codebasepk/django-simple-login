@@ -132,3 +132,11 @@ EMAIL_HOST_USER = config_helpers.get_email_credential_by_key('email')
 EMAIL_HOST_PASSWORD = config_helpers.get_email_credential_by_key('password')
 EMAIL_PORT = config_helpers.get_email_credential_by_key('port')
 DEFAULT_FROM_EMAIL = EMAIL_HOST_USER
+
+# EMAIL_BACKEND = 'django.core.mail.backends.console.EmailBackend'
+
+ACCOUNT_AUTH_METHOD = 'username'
+
+TWITTER_CONSUMER_KEY = ''
+TWITTER_CONSUMER_SECRET = ''
+AUTH_USER_SERIALIZER = 'sample_app.serializers.UserSerializer'

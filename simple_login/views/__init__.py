@@ -26,6 +26,9 @@ from simple_login.views.api import (
     PasswordChangeAPIView,
     StatusAPIView,
     RetrieveUpdateDestroyProfileAPIView,
+    RegisterAPIView,
+    TwitterLoginAPIView,
+    FacebookLoginAPIView,
 )
 
 __all__ = [
@@ -36,4 +39,7 @@ __all__ = [
     'PasswordChangeAPIView',
     'StatusAPIView',
     'RetrieveUpdateDestroyProfileAPIView',
+    'RegisterAPIView',
+    'TwitterLoginAPIView',
+    'FacebookLoginAPIView'
 ]
