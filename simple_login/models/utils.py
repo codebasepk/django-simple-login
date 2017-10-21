@@ -27,7 +27,8 @@ def process_save(sender, instance=None, created=False, **kwargs):
         user = UserHelpers(instance)
         user.generate_auth_token()
         user.hash_password(commit=False)
-        if AuthMethod.email_only() and getattr(instance, 'email', None):
+        if (AuthMethod.email_only() or AuthMethod.email_or_username()) and \
+                getattr(instance, 'email', None):
             user.set_active(False, commit=False)
             otp_handler = OTPHandler(instance)
             otp_handler.generate_and_send_account_activation_otps()
