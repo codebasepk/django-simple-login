@@ -18,6 +18,9 @@
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #
 
+AUTH_METHOD_EMAIL = "email"
+AUTH_METHOD_USERNAME = "username"
+AUTH_METHOD_EMAIL_USERNAME = "username_email"
 KEY_DEFAULT_VALUE = -1
 
 default_app_config = 'simple_login.apps.SimpleLoginConfig'

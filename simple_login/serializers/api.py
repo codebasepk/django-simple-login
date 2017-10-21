@@ -27,6 +27,7 @@ from rest_framework import (
 from simple_login import KEY_DEFAULT_VALUE
 from simple_login.serializers.base import BaseSerializer
 from simple_login.exceptions import Forbidden
+from simple_login.utils.auth import get_query
 
 OTP_METHOD_EMAIL = 'email'
 OTP_METHOD_SMS = 'sms'
@@ -38,8 +39,6 @@ except AttributeError:
 
 
 class ActivationKeyRequestSerializer(BaseSerializer):
-    email = serializers.EmailField(label='Email')
-
     def validate(self, attrs):
         super().validate(attrs)
         self.raise_if_user_does_not_exist()
@@ -49,20 +48,18 @@ class ActivationKeyRequestSerializer(BaseSerializer):
 
 
 class ActivationValidationSerializer(BaseSerializer):
-    email = serializers.EmailField(label='Email')
     email_otp = serializers.IntegerField(
         label='Email OTP', required=OTP_METHOD_EMAIL in OTP_METHODS)
-    sms_otp = serializers.IntegerField(
-        label='SMS OTP', required=OTP_METHOD_SMS in OTP_METHODS)
+    sms_otp = serializers.IntegerField(label='SMS OTP', required=OTP_METHOD_SMS in OTP_METHODS)
 
     def _raise_if_email_otp_invalid(self):
-        user = self.user_model.objects.get(email=self.email)
+        user = self.user_model.objects.get(**get_query(self.attrs))
         otp = user.account_activation_email_otp
         if otp == KEY_DEFAULT_VALUE or otp != int(self.email_otp):
             raise serializers.ValidationError('Invalid email OTP.')
 
     def _raise_if_sms_otp_invalid(self):
-        user = self.user_model.objects.get(email=self.email)
+        user = self.user_model.objects.get(**get_query(self.attrs))
         otp = user.account_activation_sms_otp
         if otp == KEY_DEFAULT_VALUE or otp != int(self.sms_otp):
             raise serializers.ValidationError('Invalid sms OTP.')
@@ -82,11 +79,10 @@ class ActivationValidationSerializer(BaseSerializer):
 
 
 class LoginSerializer(BaseSerializer):
-    email = serializers.EmailField(label='Email')
     password = serializers.CharField(label='Password')
 
     def _raise_if_password_invalid(self):
-        user = self.user_model.objects.get(email=self.email)
+        user = self.user_model.objects.get(**get_query(self.attrs))
         if not user.check_password(self.password):
             raise drf_exceptions.AuthenticationFailed('Invalid password.')
 
@@ -101,8 +97,6 @@ class LoginSerializer(BaseSerializer):
 
 
 class PasswordResetRequestSerializer(BaseSerializer):
-    email = serializers.EmailField(label='Email')
-
     def validate(self, attrs):
         super().validate(attrs)
         self.raise_if_user_does_not_exist()
@@ -111,12 +105,11 @@ class PasswordResetRequestSerializer(BaseSerializer):
 
 
 class PasswordChangeSerializer(BaseSerializer):
-    email = serializers.EmailField(label='Email')
     email_otp = serializers.IntegerField(label='Password reset email OTP')
     new_password = serializers.CharField(label='New password')
 
     def _raise_if_password_reset_email_otp_invalid(self):
-        user = self.user_model.objects.get(email=self.email)
+        user = self.user_model.objects.get(**get_query(self.attrs))
         key = user.password_reset_email_otp
         if key == KEY_DEFAULT_VALUE or key != int(self.email_otp):
             raise serializers.ValidationError('Invalid email OTP')
@@ -131,8 +124,6 @@ class PasswordChangeSerializer(BaseSerializer):
 
 
 class StatusSerializer(BaseSerializer):
-    email = serializers.EmailField(label='Email')
-
     def validate(self, attrs):
         super().validate(attrs)
         self.raise_if_user_does_not_exist()

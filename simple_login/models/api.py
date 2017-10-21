@@ -29,11 +29,11 @@ from simple_login.models.utils import process_save
 
 
 class BaseUser(AbstractBaseUser, PermissionsMixin):
-    username = models.CharField(max_length=255, blank=True, unique=True)
-    email = models.EmailField(max_length=255, blank=True, unique=True)
+    username = models.CharField(max_length=255, blank=True, unique=True, null=True)
+    email = models.EmailField(max_length=255, blank=True, unique=True, null=True)
 
     is_admin = models.BooleanField(default=False)
-    is_active = models.BooleanField(default=False)
+    is_active = models.BooleanField(default=True)
     date_joined = models.DateTimeField(auto_now_add=True, blank=False)
 
     # OTP records.

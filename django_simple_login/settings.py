@@ -132,3 +132,8 @@ EMAIL_HOST_USER = config_helpers.get_email_credential_by_key('email')
 EMAIL_HOST_PASSWORD = config_helpers.get_email_credential_by_key('password')
 EMAIL_PORT = config_helpers.get_email_credential_by_key('port')
 DEFAULT_FROM_EMAIL = EMAIL_HOST_USER
+
+# FIXME: Remove me before deployment
+EMAIL_BACKEND = 'django.core.mail.backends.console.EmailBackend'
+
+ACCOUNT_AUTH_METHOD = 'username'

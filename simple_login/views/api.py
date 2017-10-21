@@ -18,6 +18,10 @@
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #
 
+from django.conf import settings
+from django.contrib.auth import get_user_model
+from rest_framework import generics
+from rest_framework import exceptions
 from rest_framework import status
 from rest_framework.response import Response
 
@@ -36,6 +40,24 @@ from simple_login.views.base import (
     AuthenticatedRequestBaseAPIView,
 )
 from simple_login.utils.otp import OTPHandler
+from simple_login.utils.auth import AuthMethod
+from simple_login.utils.user import UserHelpers
+
+
+class SignUpAPIView(generics.CreateAPIView):
+    def post(self, request, *args, **kwargs):
+        if AuthMethod.email_only() and 'email' not in self.request.data:
+            raise exceptions.ValidationError({'email': ['This field is required.']})
+        elif AuthMethod.username_only() and 'username' not in self.request.data:
+            raise exceptions.ValidationError({'username': ['This field is required.']})
+        elif 'email' not in self.request.data and 'username' not in self.request.data:
+            raise exceptions.ValidationError('Must provide either `email` or `username`')
+        response = super().post(request, *args, **kwargs)
+        if response.status_code == status.HTTP_201_CREATED and not AuthMethod.email_only():
+            response.data.update(
+                {'token': UserHelpers(get_user_model(),
+                                      id=int(response.data['id'])).get_auth_token()})
+        return response
 
 
 class ActivationAPIView(ProfileBaseAPIView):
@@ -93,7 +115,7 @@ class StatusAPIView(BaseAPIView):
 
 class RetrieveUpdateDestroyProfileAPIView(AuthenticatedRequestBaseAPIView):
     validation_class = RetrieveUpdateDestroyProfileValidationSerializer
-    http_method_names = ['put', 'get', 'delete']
+    http_method_names = ['put', 'patch', 'get', 'delete']
 
     def get(self, *args, **kwargs):
         serializer_class = self.get_serializer_class()
