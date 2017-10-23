@@ -40,18 +40,10 @@ class OTPHandler:
         if self._hasattr('account_activation_sms_otp'):
             self._setattr(
                 'account_activation_sms_otp',
-                self.generate_sms_otp(
-                    self._getattr(settings.ACCOUNT_MOBILE_NUMBER_FIELD))
-            )
+                self.generate_sms_otp(self._getattr(settings.ACCOUNT_MOBILE_NUMBER_FIELD)))
         if self._hasattr('account_activation_email_otp'):
-            self._setattr(
-                'account_activation_email_otp',
-                self.generate_email_otp()
-            )
-            send_activation_email(
-                self.instance.email,
-                self.instance.account_activation_email_otp
-            )
+            self._setattr('account_activation_email_otp', self.generate_email_otp())
+            send_activation_email(self.instance.email, self.instance.account_activation_email_otp)
         if commit:
             self.instance.save()
 

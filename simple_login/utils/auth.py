@@ -6,16 +6,20 @@ from simple_login import AUTH_METHOD_EMAIL, AUTH_METHOD_USERNAME, AUTH_METHOD_EM
 class AuthMethod:
     @staticmethod
     def email_only():
-        if not settings.ACCOUNT_AUTH_METHOD:
+        if not hasattr(settings, 'ACCOUNT_AUTH_METHOD'):
             return True
         return settings.ACCOUNT_AUTH_METHOD == AUTH_METHOD_EMAIL
 
     @staticmethod
     def username_only():
+        if not hasattr(settings, 'ACCOUNT_AUTH_METHOD'):
+            return False
         return settings.ACCOUNT_AUTH_METHOD == AUTH_METHOD_USERNAME
 
     @staticmethod
     def email_or_username():
+        if not hasattr(settings, 'ACCOUNT_AUTH_METHOD'):
+            return False
         return settings.ACCOUNT_AUTH_METHOD == AUTH_METHOD_EMAIL_USERNAME
 
 
@@ -40,5 +44,4 @@ def get_query(data):
             raise ValueError('`username` or `email` must be provided')
     else:
         query = {}
-
     return query
