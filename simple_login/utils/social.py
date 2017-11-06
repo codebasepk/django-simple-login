@@ -1,5 +1,3 @@
-import json
-
 from django.conf import settings
 import oauth2 as oauth
 import requests
@@ -22,6 +20,6 @@ def login_twitter(access_key, access_secret):
 
 
 def login_facebook(access_token):
-    url = '{}?fields=id,first_name,last_name,email&access_token={}'.format(
+    url = '{}?fields=id,first_name,last_name,email,picture.type(large)&access_token={}'.format(
         FB_BASE_URL, access_token)
     return requests.get(url)

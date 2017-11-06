@@ -19,10 +19,13 @@
 #
 
 import json
+import tempfile
+from urllib.request import urlretrieve
 
 from django.conf import settings
 from django.core.urlresolvers import get_callable
 from django.contrib.auth import get_user_model
+from django.core.files import File
 from rest_framework import generics, exceptions, status, response, views
 from rest_framework.authtoken.models import Token
 
@@ -60,6 +63,16 @@ def get_unique_username(user_model, username_desired, append_id=0):
     return username
 
 
+def download_and_set_photo(url, instance, field, is_facebook=False):
+    if is_facebook:
+        filename = url.split('?')[0].split('/')[-1]
+    else:
+        filename = url.split('/')[-1]
+    with tempfile.NamedTemporaryFile(suffix=filename.split('.')[-1]) as f:
+        urlretrieve(url, filename=f.name)
+        getattr(instance, field).save(filename, File(f))
+
+
 class TwitterLoginAPIView(views.APIView):
     def post(self, *args, **kwargs):
         validator = serializers.TwitterLoginSerializer(data=self.request.data)
@@ -73,6 +86,18 @@ class TwitterLoginAPIView(views.APIView):
                 user = get_user_model().objects.create_user(
                     username=get_unique_username(get_user_model(),
                                                  data_json['screen_name'].lower()))
+                name = data_json.get('name', '')
+                if name:
+                    if hasattr(user, 'full_name'):
+                        user.full_name = name
+                    elif hasattr(user, 'first_name') and hasattr(user, 'last_name'):
+                        splitted = name.split(' ')
+                        user.first_name = splitted[0]
+                        if len(splitted) > 1:
+                            user.last_name = splitted[1]
+                if hasattr(user, 'photo') and data_json.get('profile_image_url', ''):
+                    url = data_json['profile_image_url'].replace('_normal', '')
+                    download_and_set_photo(url, user, 'photo')
                 obj.user = user
                 obj.save()
                 serializer = SERIALIZER(instance=user)
@@ -99,6 +124,15 @@ class FacebookLoginAPIView(views.APIView):
                 user = get_user_model().objects.create_user(
                     username=get_unique_username(get_user_model(),
                                                  data_json['first_name'].lower()))
+                first_name = data_json['first_name']
+                last_name = data_json['last_name']
+                if hasattr(user, 'full_name'):
+                    user.full_name = '{} {}'.format(first_name, last_name)
+                elif hasattr(user, 'first_name') and hasattr(user, 'last_name'):
+                    user.first_name = first_name
+                    user.last_name = last_name
+                if hasattr(user, 'photo') and data_json['picture']['data']['url']:
+                    download_and_set_photo(data_json['picture']['data']['url'], user, 'photo', True)
                 obj.user = user
                 obj.save()
                 serializer = SERIALIZER(instance=user)
