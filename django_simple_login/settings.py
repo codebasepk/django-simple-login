@@ -43,13 +43,12 @@ INSTALLED_APPS = [
     'sample_app',
 ]
 
-MIDDLEWARE_CLASSES = [
+MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
     'django.middleware.common.CommonMiddleware',
     'django.middleware.csrf.CsrfViewMiddleware',
     'django.contrib.auth.middleware.AuthenticationMiddleware',
-    'django.contrib.auth.middleware.SessionAuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
 ]
@@ -133,9 +132,9 @@ EMAIL_HOST_PASSWORD = config_helpers.get_email_credential_by_key('password')
 EMAIL_PORT = config_helpers.get_email_credential_by_key('port')
 DEFAULT_FROM_EMAIL = EMAIL_HOST_USER
 
-# EMAIL_BACKEND = 'django.core.mail.backends.console.EmailBackend'
+EMAIL_BACKEND = 'django.core.mail.backends.console.EmailBackend'
 
-ACCOUNT_AUTH_METHOD = 'username'
+ACCOUNT_AUTH_METHOD = 'email'
 
 TWITTER_CONSUMER_KEY = config_helpers.get_twitter_cred_by_key('CONSUMER_KEY')
 TWITTER_CONSUMER_SECRET = config_helpers.get_twitter_cred_by_key('CONSUMER_SECRET')

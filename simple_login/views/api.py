@@ -23,7 +23,7 @@ import tempfile
 from urllib.request import urlretrieve
 
 from django.conf import settings
-from django.core.urlresolvers import get_callable
+from django.urls import get_callable
 from django.contrib.auth import get_user_model
 from django.core.files import File
 from rest_framework import generics, exceptions, status, response, views
