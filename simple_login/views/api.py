@@ -51,7 +51,7 @@ from simple_login.utils.user import UserHelpers
 from simple_login import serializers
 
 
-SERIALIZER = get_callable(settings.AUTH_USER_SERIALIZER) if settings.AUTH_USER_SERIALIZER else \
+SERIALIZER = get_callable(settings.AUTH_USER_SERIALIZER) if hasattr(settings, 'AUTH_USER_SERIALIZER') else \
     serializers.AuthUserSerializer
 
 

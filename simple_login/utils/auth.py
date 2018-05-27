@@ -1,4 +1,5 @@
 from django.conf import settings
+from rest_framework.exceptions import ValidationError
 
 from simple_login import AUTH_METHOD_EMAIL, AUTH_METHOD_USERNAME, AUTH_METHOD_EMAIL_USERNAME
 
@@ -27,11 +28,11 @@ def get_query(data):
     assert isinstance(data, dict)
     if AuthMethod.email_only():
         if 'email' not in data:
-            raise ValueError('`email` is required')
+            raise ValidationError('`email` is required')
         query = {'email': data['email']}
     elif AuthMethod.username_only():
         if 'username' not in data:
-            raise ValueError('`username` is required')
+            raise ValidationError('`username` is required')
         query = {'username': data['username']}
     elif AuthMethod.email_or_username():
         if 'username' in data and 'email' not in data:
@@ -41,7 +42,7 @@ def get_query(data):
         elif 'username' in data and 'email' in data:
             query = {'username': data['username'], 'email': data['email']}
         else:
-            raise ValueError('`username` or `email` must be provided')
+            raise ValidationError('`username` or `email` must be provided')
     else:
         query = {}
     return query
