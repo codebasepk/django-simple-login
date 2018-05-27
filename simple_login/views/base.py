@@ -54,7 +54,7 @@ class BaseAPIView(APIView):
         return UserHelpers(self.user_model, **get_query(self.serializer.data))
 
     def get_user(self):
-        if not self.request.user.is_anonymous():
+        if not self.request.user.is_anonymous:
             return self.get_auth_user()
         return self.user_account.user
 
