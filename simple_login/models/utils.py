@@ -23,12 +23,13 @@ from simple_login.utils.auth import AuthMethod
 
 
 def process_save(sender, instance=None, created=False, **kwargs):
-    if created and not instance.is_admin:
+    if created:
         user = UserHelpers(instance)
         user.generate_auth_token()
-        user.hash_password(commit=False)
+        if not instance.is_admin:
+            user.hash_password(commit=False)
         if (AuthMethod.email_only() or AuthMethod.email_or_username()) and \
-                getattr(instance, 'email', None):
+                getattr(instance, 'email', None) and not instance.is_admin:
             user.set_active(False, commit=False)
             otp_handler = OTPHandler(instance)
             otp_handler.generate_and_send_account_activation_otps()

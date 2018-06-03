@@ -32,4 +32,4 @@ class SimpleUserManager(BaseUserManager):
         return user
 
     def create_superuser(self, **kwargs):
-        return self.create_user(is_admin=True, **kwargs)
+        return self.create_user(is_admin=True, is_superuser=True, **kwargs)
