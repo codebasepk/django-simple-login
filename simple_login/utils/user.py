@@ -71,8 +71,6 @@ class UserHelpers:
         Token.objects.create(user=self.user)
 
     def get_auth_token(self):
-        # print(self.user)
-        # Token.objects.create(user=self.user)
         return Token.objects.get(user=self.user).key
 
     def activate(self, commit=True):
