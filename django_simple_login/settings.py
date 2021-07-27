@@ -140,3 +140,10 @@ TWITTER_CONSUMER_SECRET = config_helpers.get_twitter_cred_by_key('CONSUMER_SECRE
 AUTH_USER_SERIALIZER = 'sample_app.serializers.UserSerializer'
 
 DEFAULT_AUTO_FIELD = 'django.db.models.AutoField'
+
+PASSWORD_HASHERS = [
+    'django.contrib.auth.hashers.Argon2PasswordHasher',
+    'django.contrib.auth.hashers.PBKDF2PasswordHasher',
+    'django.contrib.auth.hashers.PBKDF2SHA1PasswordHasher',
+    'django.contrib.auth.hashers.BCryptSHA256PasswordHasher',
+]
