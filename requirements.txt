@@ -1,4 +1,4 @@
-django
+django[argon2]
 djangorestframework
 oauth2
 requests
