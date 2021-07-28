@@ -167,6 +167,7 @@ class RegisterAPIView(generics.CreateAPIView):
 
 class ActivationAPIView(ProfileBaseAPIView):
     validation_class = ActivationValidationSerializer
+    http_method_names = ["post"]
 
     def post(self, *args, **kwargs):
         super().post(*args, **kwargs)
@@ -177,6 +178,7 @@ class ActivationAPIView(ProfileBaseAPIView):
 
 class ActivationKeyRequestAPIView(BaseAPIView):
     validation_class = ActivationKeyRequestSerializer
+    http_method_names = ["post"]
 
     def post(self, *args, **kwargs):
         super().post(*args, **kwargs)
@@ -187,6 +189,7 @@ class ActivationKeyRequestAPIView(BaseAPIView):
 
 class LoginAPIView(ProfileBaseAPIView):
     validation_class = LoginSerializer
+    http_method_names = ["post"]
 
     def post(self, *args, **kwargs):
         super().post(*args, **kwargs)
@@ -195,6 +198,7 @@ class LoginAPIView(ProfileBaseAPIView):
 
 class PasswordResetRequestAPIView(BaseAPIView):
     validation_class = PasswordResetRequestSerializer
+    http_method_names = ["post"]
 
     def post(self, *args, **kwargs):
         super().post(*args, **kwargs)
@@ -204,6 +208,7 @@ class PasswordResetRequestAPIView(BaseAPIView):
 
 class PasswordChangeAPIView(BaseAPIView):
     validation_class = PasswordChangeSerializer
+    http_method_names = ["post"]
 
     def post(self, *args, **kwargs):
         super().post(*args, **kwargs)
