@@ -92,6 +92,7 @@ class ProfileBaseAPIView(BaseAPIView):
         serializer_class = self.get_serializer_class()
         serializer = serializer_class(instance=self.user_account.user)
         data = serializer.data
+        self.user_account.generate_auth_token()
         data.update({'token': self.user_account.get_auth_token()})
         return data
 

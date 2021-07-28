@@ -20,8 +20,6 @@
 
 import inspect
 
-from rest_framework.authtoken.models import Token
-
 from simple_login import KEY_DEFAULT_VALUE
 from simple_login.utils import (
     generate_random_key,
@@ -68,10 +66,18 @@ class UserHelpers:
             self.user.save()
 
     def generate_auth_token(self):
+        # FIXME: Workaround a circular import dependency
+        #  the Tokens class should eventually be moved to a
+        #  better location.
+        from simple_login.models.api import Tokens as Token
         Token.objects.create(user=self.user)
 
     def get_auth_token(self):
-        return Token.objects.get(user=self.user).key
+        # FIXME: Workaround a circular import dependency
+        #  the Tokens class should eventually be moved to a
+        #  better location.
+        from simple_login.models.api import Tokens as Token
+        return Token.objects.filter(user=self.user).last().key
 
     def activate(self, commit=True):
         self.user.is_active = True
