@@ -48,6 +48,7 @@ from simple_login.utils import social
 from simple_login.utils.otp import OTPHandler
 from simple_login.utils.auth import AuthMethod
 from simple_login.utils.user import UserHelpers
+from simple_login.models.api import Tokens
 
 
 SERIALIZER = get_callable(settings.AUTH_USER_SERIALIZER) if hasattr(settings, 'AUTH_USER_SERIALIZER') else \
@@ -73,8 +74,6 @@ def download_and_set_photo(url, instance, field, is_facebook=False):
 
 
 class TwitterLoginAPIView(views.APIView):
-    from simple_login.models.api import Tokens
-
     def post(self, *args, **kwargs):
         validator = serializers.TwitterLoginSerializer(data=self.request.data)
         validator.is_valid(True)
@@ -103,18 +102,17 @@ class TwitterLoginAPIView(views.APIView):
                 obj.save()
                 serializer = SERIALIZER(instance=user)
                 d = serializer.data
-                d.update({'token': self.Tokens.objects.get(user=obj.user).key})
+                d.update({'token': Tokens.objects.get(user=obj.user).key})
                 return response.Response(data=d, status=status.HTTP_201_CREATED)
             serializer = SERIALIZER(instance=obj.user)
             d = serializer.data
-            d.update({'token': self.Tokens.objects.get(user=obj.user).key})
+            d.update({'token': Tokens.objects.get(user=obj.user).key})
             return response.Response(data=d, status=status.HTTP_200_OK)
         return response.Response(data=json.loads(data.decode()),
                                  status=status.HTTP_400_BAD_REQUEST)
 
 
 class FacebookLoginAPIView(views.APIView):
-    from simple_login.models.api import Tokens
 
     def post(self, *args, **kwargs):
         validator = serializers.FacebookLoginSerializer(data=self.request.data)
@@ -140,11 +138,11 @@ class FacebookLoginAPIView(views.APIView):
                 obj.save()
                 serializer = SERIALIZER(instance=user)
                 d = serializer.data
-                d.update({'token': self.Tokens.objects.get(user=obj.user).key})
+                d.update({'token': Tokens.objects.get(user=obj.user).key})
                 return response.Response(data=d, status=status.HTTP_201_CREATED)
             serializer = SERIALIZER(instance=obj.user)
             d = serializer.data
-            d.update({'token': self.Tokens.objects.get(user=obj.user).key})
+            d.update({'token': Tokens.objects.get(user=obj.user).key})
             return response.Response(data=d, status=status.HTTP_200_OK)
         return response.Response(data=resp.json(), status=status.HTTP_400_BAD_REQUEST)
 

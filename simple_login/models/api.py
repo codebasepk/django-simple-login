@@ -25,7 +25,6 @@ from django.db import models
 from django.conf import settings
 from django.db.models.signals import post_save
 from rest_framework.authtoken.models import Token
-from django.utils.translation import gettext_lazy as _
 from django.contrib.auth.models import AbstractBaseUser, PermissionsMixin
 
 from simple_login import KEY_DEFAULT_VALUE
@@ -37,16 +36,16 @@ class Tokens(Token):
     """
     The default authorization token model.
     """
-    key = models.CharField(_("Key"), max_length=40, db_index=True, unique=True)
+    key = models.CharField("Key", max_length=40, db_index=True, unique=True)
     user = models.ForeignKey(
         settings.AUTH_USER_MODEL, related_name='auth_tokens',
-        on_delete=models.CASCADE, verbose_name=_("User")
+        on_delete=models.CASCADE, verbose_name="User"
     )
-    created = models.DateTimeField(_("Created"), auto_now_add=True)
+    created = models.DateTimeField("Created", auto_now_add=True)
 
     class Meta:
-        verbose_name = _("Token")
-        verbose_name_plural = _("Tokens")
+        verbose_name = "Token"
+        verbose_name_plural = "Tokens"
 
     def save(self, *args, **kwargs):
         if not self.key:
