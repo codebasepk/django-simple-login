@@ -30,6 +30,7 @@ urlpatterns = [
     url(r'^api/request-activation-key$', views.ActivationKeyRequestAPIView.as_view()),
     url(r'^api/activate$', views.ActivateAPIView.as_view()),
     url(r'^api/login$', views.LoginAPIView.as_view()),
+    url(r'^api/logout$', views.Logout.as_view()),
     url(r'^api/forgot-password$', views.ForgotPasswordAPIView.as_view()),
     url(r'^api/change-password$', views.ChangePasswordAPIView.as_view()),
     url(r'^api/status$', views.StatusAPIView.as_view()),

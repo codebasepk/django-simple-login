@@ -22,6 +22,8 @@ from simple_login import views
 from sample_app import models
 from sample_app import serializers
 
+from rest_framework import permissions
+
 
 class RegisterAPIView(views.RegisterAPIView):
     serializer_class = serializers.UserSerializer
@@ -56,3 +58,7 @@ class ChangePasswordAPIView(views.PasswordChangeAPIView):
 
 class StatusAPIView(views.StatusAPIView):
     user_model = models.User
+
+
+class Logout(views.LogoutAPIView):
+    permission_classes = (permissions.IsAuthenticated, )
