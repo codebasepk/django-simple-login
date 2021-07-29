@@ -244,7 +244,7 @@ class RetrieveUpdateDestroyProfileAPIView(AuthenticatedRequestBaseAPIView):
 
 
 class LogoutAPIView(APIView):
-    def get(self, *args):
+    def post(self, *args):
         auth_token = self.request.META['HTTP_AUTHORIZATION'].split(" ")[1]
         token = Tokens.objects.filter(key=auth_token).first()
         if token:
