@@ -27,6 +27,7 @@ from django.urls import get_callable
 from django.contrib.auth import get_user_model
 from django.core.files import File
 from rest_framework import generics, exceptions, status, response, views
+from rest_framework.views import APIView
 
 from simple_login.serializers import (
     ActivationKeyRequestSerializer,
@@ -240,3 +241,12 @@ class RetrieveUpdateDestroyProfileAPIView(AuthenticatedRequestBaseAPIView):
         serializer = self.update_fields_with_request_data()
         self.ensure_password_hashed()
         return response.Response(data=serializer.data, status=status.HTTP_200_OK)
+
+
+class LogoutAPIView(APIView):
+    def post(self, *args):
+        auth_token = self.request.META['HTTP_AUTHORIZATION'].split(" ")[1]
+        token = Tokens.objects.filter(key=auth_token).first()
+        if token:
+            token.delete()
+        return response.Response(status=status.HTTP_200_OK)
