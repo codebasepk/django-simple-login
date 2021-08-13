@@ -73,7 +73,7 @@ TEMPLATES = [
 
 REST_FRAMEWORK = {
     'DEFAULT_AUTHENTICATION_CLASSES': (
-        'simple_login.utils.authentication.TokenAuthentication',
+        'simple_login.utils.authentication.ExpiringTokenAuthentication',
     )
 }
 
@@ -147,3 +147,5 @@ PASSWORD_HASHERS = [
     'django.contrib.auth.hashers.PBKDF2SHA1PasswordHasher',
     'django.contrib.auth.hashers.BCryptSHA256PasswordHasher',
 ]
+
+TOKEN_EXPIRED_AFTER_DAYS = 30
