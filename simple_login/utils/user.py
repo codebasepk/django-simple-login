@@ -77,7 +77,6 @@ class UserHelpers:
         #  the Tokens class should eventually be moved to a
         #  better location.
         from simple_login.models.api import Tokens as Token
-
         return Token.objects.filter(user=self.user).last().key
 
     def activate(self, commit=True):
